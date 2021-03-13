@@ -4,7 +4,7 @@
 //axios: ajax통신을 받아오는 것
 //@types/axios: typescript에서 axios를 다루는데 도움이 되는 정보들
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import {IArticle} from '../types'
+import {IArticle, IMember} from '../types'
 
 // API 원형
 abstract class HttpClient {
@@ -105,12 +105,20 @@ export interface MainApi__article_doWrite__IResponseBody extends Base__IResponse
   };
 }
 
+
+// /usr/member/list 의 응답 타입
+export interface MainApi__member_list__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    members: IMember[]
+  };
+}
+
 // http://localhost:8024/usr/ 와의 통신장치
 export class MainApi extends HttpClient {
   public constructor() {
     super(
       axios.create({
-        baseURL:'http://localhost:8024/usr/',
+        baseURL:'http://localhost:8090/usr/',
       })
     );
   }
@@ -151,6 +159,14 @@ export class MainApi extends HttpClient {
       }
     );
   }
+
+
+  // http://localhost:8021/usr/article/list?boardId=? 를 요청하고 응답을 받아오는 함수
+  public member_list(boardId: number, searchKeywordType:string, searchKeyword:string, page:number) {
+    return this.instance.get<MainApi__member_list__IResponseBody>(`/member/list?boardId=${boardId}&searchKeywordType=${searchKeywordType}&searchKeyword=${searchKeyword}&page=${page}`);
+  }
+
+  
 
 } 
 

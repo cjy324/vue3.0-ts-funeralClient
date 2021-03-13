@@ -38,14 +38,15 @@ const routes = [
     component: HomeMain 
   },
   { 
-    path: '/article/list', 
+    path: '/member/list', 
     component: DirectorList, 
-    props: (route:any) => ({ boardId: 1})
+    props: (route:any) => ({ boardId: route.query.boardId})
   },
   { 
     path: '/director/profile', 
     component: DirectorProfile 
   },
+
 
 ];
 

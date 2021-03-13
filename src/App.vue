@@ -17,7 +17,7 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/article/list" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+            <router-link to="/member/list" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               DIRECTOR's
             </router-link>
           </li>

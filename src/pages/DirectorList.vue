@@ -1,19 +1,26 @@
 <template>
   <!-- 메인-지도사 리스트 시작 -->
   <section class="directorList-section bg-gray-500">
-    <div class="mt-6" v-bind:key="article.id" v-for="article in state.articles">
-      {{ article.title }} {{ article.regDate }}
-    </div>
     <div class="h-2 bg-gray-500"></div>
     <!--리스트 search 시작-->
     <form class="flex h-10 directorList-section-search m-2 text-right rounded-md" v-on:submit="seacrchDirector">
-      <input ref="searchKewoardElRef" class="h-full w-full rounded-l-md pl-4" type="text" placeholder="검색어 입력">
+      <select ref="searchKeywordTypeElRef" class="h-full w-full" >
+        <option value="name">이름</option>
+        <option value="nickname">닉네임</option>
+        <option value="loginId">아이디</option>
+      </select>
+      <select ref="pageElRef" id="">
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+      <input ref="searchKeywordElRef" class="h-full w-full rounded-l-md pl-4" type="text" placeholder="검색어 입력">
       <button class="w-20 text-white rounded-r-md bg-blue-500" type="submit">검색</button>
     </form>
     <!--리스트 search 끝-->
     <!--리스트 grid 시작-->
     <div class="directorList-section-grid grid grid-cols-1 md:grid-cols-3 gap-3">
       <!--리스트 grid__body 시작-->
+      <div class="mt-6" v-bind:key="member.id" v-for="member in state.members">
       <div class="directorList-section-grid__body p-8 bg-white m-2 border rounded-xl">
         <!--프로필 이미지-->
         <div class="flex justify-center overflow-hidden">
@@ -22,23 +29,23 @@
         <!--이름-->
         <div class="text-center m-4">
           <router-link to="/director/profile" class="text-indigo-500 font-bold text-xl md:text-2xl hover:text-gray-700">
-            홍길동
+            {{ member.name }}
           </router-link>
         </div>
         <!--소개멘트-->
         <h1 class="font-semibold text-gray-900 leading-none text-xl mt-1 mb-3 capitalize break-normal">
-          간단하게 자신을 소개할 멘트를 작성해주세요.
+          {{ member.nickname }}
         </h1>
         <!--활동이력-->
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            지역: 대전광역시
+            {{ member.cellphoneNo }}
           </p>
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            자격증: 장례지도사 2급
+            {{ member.email }}
           </p>
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            경력: 5년
+            {{ member.regDate }}
           </p>
         </div>
         <!--평점-->
@@ -80,6 +87,7 @@
         </div>
         
       </div>
+      </div>
       <!--리스트 grid__body 끝-->
     </div>
     <!--리스트 grid 끝-->
@@ -90,7 +98,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, getCurrentInstance, onMounted, watch } from 'vue'
-import { IArticle } from '../types/'
+import { IMember } from '../types/'
 import { MainApi } from '../apis/'
 import { Router } from 'vue-router'
 
@@ -113,55 +121,64 @@ export default defineComponent({
     const router:Router = getCurrentInstance()?.appContext.config.globalProperties.$router;
     const mainApi:MainApi = getCurrentInstance()?.appContext.config.globalProperties.$mainApi;
    
-    const searchKewoardElRef = ref<HTMLInputElement>();
+    const searchKeywordElRef = ref<HTMLInputElement>();
+    const searchKeywordTypeElRef = ref<HTMLSelectElement>();
+    const pageElRef = ref<HTMLSelectElement>();
 
 
 
     const state = reactive({
-      articles: [] as IArticle[]
+      members: [] as IMember[]
     });
 
-    function loadArticles(boardId:number){
-      mainApi.article_list(boardId)
-      .then(axiosResponse => {
-          state.articles = axiosResponse.data.body.articles;
-      });
-    }
+    const searchKeyword = "1";
 
+//21.03.13 select값을 가져오는데 실패....
+    const searchKeywordType = searchKeywordTypeElRef.value?.selectedOptions.namedItem;
+    //let page = Number(pageElRef.value?.value);
+alert(searchKeywordType);
+   
+
+    function loadMembers(boardId:number, searchKeyword:string, searchKeywordType:string, page:number){
+
+ 
+      mainApi.member_list(boardId, searchKeywordType, searchKeyword, page)
+      .then(axiosResponse => {
+          state.members = axiosResponse.data.body.members;
+      });
+
+      
+    }
+ 
     // onMounted 바로 실행하는 것이 아닌 모든 것이 준비되었을때 실행됨
     onMounted(() => {
-      loadArticles(props.boardId);
+      loadMembers(props.boardId, searchKeyword, searchKeywordType, 1);
     });
 
     
 
     function seacrchDirector(){
 
-      if(searchKewoardElRef.value == null ){
+      if(searchKeywordElRef.value == null ){
         return;
       }
 
-      const searchKewoard = searchKewoardElRef.value.value.trim();
+      const searchKeyword = searchKeywordElRef.value.value.trim();
 
-      if(searchKewoard.length == 0){
+      if(searchKeyword.length == 0){
         alert('키워드를 입력해주세요.')
         return;
       }
-      
-      mainApi.article_doWrite(1, searchKewoard, searchKewoard)
-        .then(axiosResponse => {
-          alert(axiosResponse.data.msg);
-        });
 
-      
     };
 
 
     return{
       state,
       seacrchDirector,
-      searchKewoardElRef,
-      
+      searchKeywordElRef,
+      searchKeywordTypeElRef,
+      pageElRef,
     }
 
   }
