@@ -3,25 +3,24 @@
   <section class="directorList-section bg-gray-500">
     <div class="h-2 bg-gray-500"></div>
     <!--리스트 search 시작-->
-    <form class="flex h-10 directorList-section-search m-2 text-right rounded-md">
-      <select ref="searchKeywordTypeElRef" class="h-full w-full" id="">
+    <form class="flex h-10 directorList-section-search m-2 text-right rounded-md" v-on:submit="seacrchDirector">
+      <select ref="searchKeywordTypeElRef" class="h-full w-full" id="" @change="onChangeSearchKeywordType($event)">
         <option value="name">이름</option>
         <option value="nickname">닉네임</option>
         <option value="loginId">아이디</option>
       </select>
-      <select ref="pageElRef" id="">
+      <select ref="pageElRef" id=""  @change="onChangePageElRef($event)">
         <option value="1">1</option>
         <option value="2">2</option>
       </select>
-      <input ref="searchKeywordElRef" class="h-full w-full rounded-l-md pl-4" type="text" placeholder="검색어 입력" v-model="searchKeyword">
-      <button class="w-20 text-white rounded-r-md bg-blue-500" type="button">검색</button>
+      <input ref="searchKeywordElRef" class="h-full w-full rounded-l-md pl-4" type="text" placeholder="검색어 입력" v-bind:value="inputText" v-on:input="updateInput">
+      <button class="w-20 text-white rounded-r-md bg-blue-500" type="submit">검색</button>
     </form>
-    {{ searchKeyword }}
     <!--리스트 search 끝-->
     <!--리스트 grid 시작-->
-    <div class="directorList-section-grid grid grid-cols-1 md:grid-cols-3 gap-3 overflow-hidden">
+    <div class="directorList-section-grid grid grid-cols-1 md:grid-cols-3 gap-3">
       <!--리스트 grid__body 시작-->
-      <div class="mt-6" v-bind:key="member.id" v-for="member in filteredMembers">
+      <div class="mt-6" v-bind:key="member.id" v-for="member in state.members">
       <div class="directorList-section-grid__body p-8 bg-white m-2 border rounded-xl">
         <!--프로필 이미지-->
         <div class="flex justify-center overflow-hidden">
@@ -35,7 +34,7 @@
         </div>
         <!--소개멘트-->
         <h1 class="font-semibold text-gray-900 leading-none text-xl mt-1 mb-3 capitalize break-normal">
-          소개멘트 작성란입니다.
+          {{ member.nickname }}
         </h1>
         <!--활동이력-->
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
@@ -49,13 +48,10 @@
             {{ member.regDate }}
           </p>
         </div>
-        <button class="btn-primary mt-2 h-10 w-full rounded-md">
-          선택
-        </button>
         <!--평점-->
         <div class="flex justify-center items-center w-full text-center mt-3">
           <div class="font-bold text-xl mr-5">
-            '{{ member.name }}'님의 전체 평점
+            '홍길동'님의 전체 평점
           </div>
           <div class="border rounded-full h-24 w-24 bg-yellow-500 flex justify-center items-center">
             <div class="font-bold text-2xl text-white">
@@ -101,9 +97,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, getCurrentInstance, onMounted, computed, watch } from 'vue'
+import { defineComponent, reactive, ref, getCurrentInstance, onMounted, watch, Events } from 'vue'
 import { IMember } from '../types/'
 import { MainApi } from '../apis/'
+import { Router } from 'vue-router'
 
 export default defineComponent({
   name: 'DirectorList',
@@ -117,43 +114,125 @@ export default defineComponent({
       type: Number,
       required: true,
       default:1
-    },
+    }
   },
 
   setup(props){
+    const router:Router = getCurrentInstance()?.appContext.config.globalProperties.$router;
     const mainApi:MainApi = getCurrentInstance()?.appContext.config.globalProperties.$mainApi;
+   
+    const searchKeywordElRef = ref<HTMLInputElement>();
+    const searchKeywordTypeElRef = ref<HTMLSelectElement>();
+    const pageElRef = ref<HTMLSelectElement>();
 
-    const state:any = reactive({
-      members: [] as IMember[],
-      searchKeyword:''
+
+
+    const state = reactive({
+      inputText:'',
+      members: [] as IMember[]
     });
-    //21.03.15 리스트 검색기능 구현 진행중..
-    //문제점
-    // - v-model 바로 안나옴
-    // - 검색타입, 페이지 값 어떻게 받고, 어떻게 넘길지.....
-    const filteredMembers = computed(() => {
-      return state.members.filter((member:IMember) => member.name.includes(state.searchKeyword))
-    })
+
+    let searchKeyword = "";
+    let searchKeywordType = "name";
+    let page = "1";
+
+
+    if(searchKeywordElRef.value?.value.trim() != undefined){
+      searchKeyword = searchKeywordElRef.value?.value.trim();
+      alert(searchKeyword);
+    }
+
+
+    function onChangeSearchKeywordType(event:Event){
+      if(searchKeywordTypeElRef.value?.value != undefined){
+      searchKeywordType = searchKeywordTypeElRef.value?.value;
+      }
+      
+    };
+
+    function onChangePageElRef(event:Event){
+      if(pageElRef.value?.value != undefined){
+      page = pageElRef.value?.value;
+    }
+      alert(page+"바뀜");
+    }
+
     
-    
+    function updateInput(event:Event) {
+      var updatedText = searchKeywordElRef.value?.value;
+      if(updatedText != undefined){
+        state.inputText = updatedText;
+      }
+      searchKeyword = state.inputText;
+    }
+
+    const startLoadMember = (boardId:number, searchKeywordType:string, searchKeyword:string, page:number) => {
+      loadMembers(boardId, searchKeywordType, searchKeyword, page);
+    }
+   
 
     function loadMembers(boardId:number, searchKeywordType:string, searchKeyword:string, page:number){
       
-      mainApi.member_list(boardId, searchKeywordType, searchKeyword, page)
+      mainApi.member_list(boardId, searchKeywordType, searchKeyword, 1)
       .then(axiosResponse => {
           state.members = axiosResponse.data.body.members;
       });
 
+      
     }
 
+
+    //검색 옵션 다 반영 후에 리스트 불러오기
+    const changeSearchOptions = (onSuccess:Function) => {
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
     // onMounted 바로 실행하는 것이 아닌 모든 것이 준비되었을때 실행됨
     onMounted(() => {
-      loadMembers(props.boardId, "name", "", 1);
+      startLoadMember(1, searchKeywordType, searchKeyword, 1);
     });
+
+    
+
+    function seacrchDirector(){
+
+      if(searchKeywordElRef.value == null ){
+        return;
+      }
+
+      const searchKeyword = searchKeywordElRef.value.value.trim();
+
+      if(searchKeyword.length == 0){
+        alert('키워드를 입력해주세요.')
+        return;
+      }
+
+    };
+
 
     return{
       state,
-      filteredMembers,
+      seacrchDirector,
+      searchKeywordElRef,
+      searchKeywordTypeElRef,
+      updateInput,
+      onChangeSearchKeywordType,
+      onChangePageElRef,
+      pageElRef,
     }
 
   }
