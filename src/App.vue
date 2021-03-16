@@ -9,7 +9,11 @@
 
       <div class="flex-grow"></div>
 
-      <nav class="header-bar__menu-box-1">
+      <router-link v-if="globalShare.isLogined && !!globalShare.loginedClient.profileImgUrl" to="/client/mypage" class="header-bar__profile-img flex items-center">
+        <img :src="'http://localhost:8090' + globalShare.loginedClient.profileImgUrl" class="rounded-full" width="40" height="40" alt="">
+      </router-link>
+
+      <nav class="header-bar__menu-box-1 overflow-x-auto ml-2">
         <ul class="flex h-full">
           <li>
             <router-link to="/" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
@@ -17,7 +21,7 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/member/list" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+            <router-link to="/director/list" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               DIRECTOR's
             </router-link>
           </li>
@@ -25,6 +29,21 @@
             <router-link to="/director/profile" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               DIRECTOR
             </router-link>
+          </li>
+          <li v-if="globalShare.isLogined == false">
+            <router-link to="/client/join" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
+              Sign-up
+            </router-link>
+          </li>
+          <li v-if="globalShare.isLogined == false">
+            <router-link to="/client/login" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+              Log-in
+            </router-link>
+          </li>
+          <li v-if="globalShare.isLogined">
+            <a v-on:click="globalShare.logout" class="cursor-pointer h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
+              Log-out
+            </a>
           </li>
         </ul>
       </nav>
@@ -73,6 +92,9 @@ export default defineComponent({
 }
 .btn-info {
   @apply py-2 px-4 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg;
+}
+.btn-link {
+  @apply underline text-blue-500 hover:text-red-500 cursor-pointer;
 }
 
 
