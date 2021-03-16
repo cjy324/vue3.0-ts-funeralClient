@@ -3,20 +3,19 @@
   <section class="directorList-section bg-gray-500">
     <div class="h-2 bg-gray-500"></div>
     <!--리스트 search 시작-->
-    <form class="flex h-10 directorList-section-search m-2 text-right rounded-md">
-      <select ref="searchKeywordTypeElRef" class="h-full w-full" id="">
+    <div class="flex h-10 directorList-section-search m-2 text-right rounded-md">
+      <select class="h-full w-1/4 rounded-l-md" id="" @change="onChangeSearchKeywordType($event)">
         <option value="name">이름</option>
         <option value="nickname">닉네임</option>
         <option value="loginId">아이디</option>
       </select>
-      <select ref="pageElRef" id="">
+      <select class="h-full w-1/6" @change="onChangePageElRef($event)">
         <option value="1">1</option>
         <option value="2">2</option>
       </select>
-      <input ref="searchKeywordElRef" class="h-full w-full rounded-l-md pl-4" type="text" placeholder="검색어 입력" v-model="searchKeyword">
+      <input id="searchKeywordElRef" ref="searchKeywordElRef" class="h-full w-full pl-4" type="text" placeholder="검색어 입력" :value="searchKeyword" @keyup.enter="onInput($event)" >
       <button class="w-20 text-white rounded-r-md bg-blue-500" type="button">검색</button>
-    </form>
-    {{ searchKeyword }}
+    </div>
     <!--리스트 search 끝-->
     <!--리스트 grid 시작-->
     <div class="directorList-section-grid grid grid-cols-1 md:grid-cols-3 gap-3 overflow-hidden">
@@ -39,14 +38,15 @@
         </h1>
         <!--활동이력-->
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
+          활동이력
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            {{ member.cellphoneNo }}
+            - {{ member.cellphoneNo }}
           </p>
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            {{ member.email }}
+            - {{ member.email }}
           </p>
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            {{ member.regDate }}
+            - {{ member.regDate }}
           </p>
         </div>
         <button class="btn-primary mt-2 h-10 w-full rounded-md">
@@ -105,9 +105,13 @@ import { defineComponent, reactive, ref, getCurrentInstance, onMounted, computed
 import { IMember } from '../types/'
 import { MainApi } from '../apis/'
 
+const searchKeywordElRef = ref<HTMLInputElement>();
+
 export default defineComponent({
   name: 'DirectorList',
 
+//프롭스 속성은 컴포넌트 간에 데이터를 전달할 수 있는 컴포넌트 통신 방법입니다. 
+//프롭스 속성을 기억할 때는 상위 컴포넌트에서 하위 컴포넌트로 내려보내는 데이터 속성으로 기억하면 쉽습니다
   props: {
     globalShare: {
       type: Object,
@@ -125,20 +129,56 @@ export default defineComponent({
 
     const state:any = reactive({
       members: [] as IMember[],
-      searchKeyword:''
+      searchKeyword: '' as String,
+      result:'' as String,
     });
-    //21.03.15 리스트 검색기능 구현 진행중..
+
+    
+    //21.03.16 리스트 검색기능 구현 진행중..
     //문제점
-    // - v-model 바로 안나옴
-    // - 검색타입, 페이지 값 어떻게 받고, 어떻게 넘길지.....
+    // 검색버튼 클릭시에도 onInput이 되도록 개선 필요
+
+    let searchKeywordType = "name";
+    let page = "1";
+
+    function onInput(event:any){
+      state.searchKeyword = event.target.value;
+      return state.searchKeyword;
+    }
+
+    function onChangeSearchKeywordType(event:any){
+      searchKeywordType = event.target.value;
+      return searchKeywordType;
+    };
+
+    function onChangePageElRef(event:any){
+      page = event.target.value;
+      return page;
+    }
+
+    //alert("1");
     const filteredMembers = computed(() => {
-      return state.members.filter((member:IMember) => member.name.includes(state.searchKeyword))
+      //alert("2");
+      state.result = state.searchKeyword;
+
+      let filteredMembers = state.members;
+
+      if(searchKeywordType == "name"){
+        filteredMembers = state.members.filter((member:IMember) => member.name.includes(state.searchKeyword))
+      }
+      if(searchKeywordType == "nickname"){
+        filteredMembers = state.members.filter((member:IMember) => member.nickname.includes(state.searchKeyword))
+      }
+      if(searchKeywordType == "loginId"){
+        filteredMembers = state.members.filter((member:IMember) => member.loginId.includes(state.searchKeyword))
+      }
+      return filteredMembers
     })
     
     
 
     function loadMembers(boardId:number, searchKeywordType:string, searchKeyword:string, page:number){
-      
+      //alert("4");
       mainApi.member_list(boardId, searchKeywordType, searchKeyword, page)
       .then(axiosResponse => {
           state.members = axiosResponse.data.body.members;
@@ -148,12 +188,17 @@ export default defineComponent({
 
     // onMounted 바로 실행하는 것이 아닌 모든 것이 준비되었을때 실행됨
     onMounted(() => {
+      //alert("3");
       loadMembers(props.boardId, "name", "", 1);
     });
 
     return{
       state,
       filteredMembers,
+      onInput,
+      onChangeSearchKeywordType,
+      onChangePageElRef
+
     }
 
   }
