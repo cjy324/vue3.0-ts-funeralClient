@@ -173,7 +173,7 @@ export default defineComponent({
 
     function loadMembers(boardId:number, searchKeywordType:string, searchKeyword:string, page:number){
       
-      mainApi.member_list(boardId, searchKeywordType, searchKeyword, 1)
+      mainApi.director_list()
       .then(axiosResponse => {
           state.members = axiosResponse.data.body.members;
       });

@@ -1,7 +1,7 @@
 <template>
   <TitleBar>로그인</TitleBar>
 
-  <section class="section section-client-login-form px-2">
+  <section class="section section-member-login-form px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <form v-if="globalShare.isLogined == false" v-on:submit.prevent="checkAndLogin">
@@ -27,12 +27,12 @@
 
 <script lang="ts">
 import { defineComponent, ref, getCurrentInstance, onMounted } from 'vue'
-import { MainApi } from '../apis/'
+import { MainApi } from '../apis'
 import { useRoute } from 'vue-router'
 import { Router } from 'vue-router'
 
 export default defineComponent({
-  name: 'ClientLoginPage',
+  name: 'MemberLoginPage',
   props: {
     globalShare: {
       type: Object,
@@ -95,7 +95,7 @@ export default defineComponent({
     
     }
     function login(loginId:string, loginPw:string) {
-      mainApi.client_authKey(loginId, loginPw)
+      mainApi.member_authKey(loginId, loginPw)
         .then(axiosResponse => {
           alert(axiosResponse.data.msg);
           
@@ -106,20 +106,20 @@ export default defineComponent({
 
           const authKey = axiosResponse.data.body.authKey;
 
-          const loginedClient = axiosResponse.data.body.client;  //client클래스 가져오기
+          const loginedMember = axiosResponse.data.body.member;  //member클래스 가져오기
 
           localStorage.setItem("authKey", authKey);
-          localStorage.setItem("loginedClientId", loginedClient.id + "");
-          localStorage.setItem("loginedClientName", loginedClient.name);
-          localStorage.setItem("loginedClientNickname", loginedClient.nickname);
-          localStorage.setItem("loginedClientProfileImgUrl", loginedClient.extra__thumbImg);
+          localStorage.setItem("loginedMemberId", loginedMember.id + "");
+          localStorage.setItem("loginedMemberName", loginedMember.name);
+          localStorage.setItem("loginedMemberNickname", loginedMember.nickname);
+          localStorage.setItem("loginedMemberProfileImgUrl", loginedMember.extra__thumbImg);
 
-          props.globalShare.loginedClient = {
+          props.globalShare.loginedMember = {
             authKey,
-            id:loginedClient.id,
-            name:loginedClient.name,
-            nickname:loginedClient.nickname,
-            profileImgUrl:loginedClient.extra__thumbImg
+            id:loginedMember.id,
+            name:loginedMember.name,
+            nickname:loginedMember.nickname,
+            profileImgUrl:loginedMember.extra__thumbImg
 
           };
 

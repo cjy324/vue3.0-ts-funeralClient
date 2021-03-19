@@ -16,48 +16,48 @@ import FormRow from './components/FormRow.vue';
 import HomeMain from './pages/HomeMain.vue'
 import DirectorList from './pages/DirectorList.vue'
 import DirectorProfile from './pages/DirectorProfile.vue'
-import ClientJoinPage from './pages/ClientJoinPage.vue'
-import ClientLoginPage from './pages/ClientLoginPage.vue'
+import MemberJoinPage from './pages/MemberJoinPage.vue'
+import MemberLoginPage from './pages/MemberLoginPage.vue'
 import OrderPage from './pages/OrderPage.vue'
 
 
 // 전역state 만들기
 /// localStorage에서 로그인 정보 가져오기
 const authKey = localStorage.getItem("authKey")
-const loginedClientId  = Util.toIntOrNull(localStorage.getItem("loginedClientId"))
+const loginedMemberId  = Util.toIntOrNull(localStorage.getItem("loginedMemberId"))
 // localStorage에 저장될 때 문장화가 됨 
 // null이 "null"과 같이 문장이되어 저장되어버림
 // 이 버그를 방지하기위해 Util.toStringOrNull()함수 적용
-const loginedClientName = Util.toStringOrNull(localStorage.getItem("loginedClientName"))
-const loginedClientNickname  = Util.toStringOrNull(localStorage.getItem("loginedClientNickname"))
-const loginedClientProfileImgUrl  = Util.toStringOrNull(localStorage.getItem("loginedClientProfileImgUrl"))
+const loginedMemberName = Util.toStringOrNull(localStorage.getItem("loginedMemberName"))
+const loginedMemberNickname  = Util.toStringOrNull(localStorage.getItem("loginedMemberNickname"))
+const loginedMemberProfileImgUrl  = Util.toStringOrNull(localStorage.getItem("loginedMemberProfileImgUrl"))
 
 /*state => 상태
 페이지 글과 같은 state는 전역적으로 필요하지 않음
 하지만 로그인 정보의 경우 전역적으로 필요함 
 이를 위해 전역state(=> globalShare)를 구축해야함*/
 const globalShare:any = reactive({
-  //loginedClient:{},  //loginedClient:{}는 비어있는 상태
+  //loginedMember:{},  //loginedMember:{}는 비어있는 상태
   //로그인 정보 채우기
-  loginedClient:{
+  loginedMember:{
     authKey,
-    id:loginedClientId,
-    name:loginedClientName,
-    nickname:loginedClientNickname,
-    profileImgUrl:loginedClientProfileImgUrl
+    id:loginedMemberId,
+    name:loginedMemberName,
+    nickname:loginedMemberNickname,
+    profileImgUrl:loginedMemberProfileImgUrl
   },
-  //globalShare.loginedClient가 비어있지 않는지를 computed로 자동 체크
+  //globalShare.loginedMember가 비어있지 않는지를 computed로 자동 체크
   //비어있지 않다면(===false) isLogined
-  //isLogined: computed(() => Util.isEmptyObject(globalShare.loginedClient) === false)  
-  isLogined: computed(() => globalShare.loginedClient.id !== null ),
+  //isLogined: computed(() => Util.isEmptyObject(globalShare.loginedMember) === false)  
+  isLogined: computed(() => globalShare.loginedMember.id !== null ),
   
   //로그아웃
   logout: () => { 
       localStorage.removeItem("authKey");
-      localStorage.removeItem("loginedClientId");
-      localStorage.removeItem("loginedClientName");
-      localStorage.removeItem("loginedClientNickname");
-      localStorage.removeItem("loginedClientProfileImgUrl");
+      localStorage.removeItem("loginedMemberId");
+      localStorage.removeItem("loginedMemberName");
+      localStorage.removeItem("loginedMemberNickname");
+      localStorage.removeItem("loginedMemberProfileImgUrl");
 
       location.replace('/');
       alert('로그아웃 되었습니다.')
@@ -86,17 +86,17 @@ const routes = [
     component: DirectorProfile 
   },
   {
-    path: '/client/join',
-    component: ClientJoinPage,
+    path: '/member/join',
+    component: MemberJoinPage,
     props: (route:any) => ({globalShare})
   },
   {
-    path: '/client/login',
-    component: ClientLoginPage,
+    path: '/member/login',
+    component: MemberLoginPage,
     props: (route:any) => ({globalShare})
   },
   {
-    path: '/client/doOrder',
+    path: '/order/doAdd',
     component: OrderPage,
     props: (route:any) => ({globalShare})
   },

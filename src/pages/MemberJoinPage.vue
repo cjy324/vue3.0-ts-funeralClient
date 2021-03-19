@@ -1,7 +1,7 @@
 <template>
   <TitleBar>회원가입</TitleBar>
 
-  <section class="section section-client-join-form px-2">
+  <section class="section section-member-join-form px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <form v-if="globalShare.isLogined == false" v-on:submit.prevent="checkAndJoin">
@@ -30,13 +30,7 @@
             <input ref="emailElRef" class="form-row-input" type="email" placeholder="이메일을 입력해주세요.">
           </FormRow>
           <FormRow title="시/도">
-            <input ref="address_stateElRef" class="form-row-input" type="text" placeholder="시/도 주소를 입력해주세요.">
-          </FormRow>
-          <FormRow title="시/군/구">
-            <input ref="address_cityElRef" class="form-row-input" type="text" placeholder="시/군/구 주소를 입력해주세요.">
-          </FormRow>
-          <FormRow title="읍/면/동">
-            <input ref="address_streetElRef" class="form-row-input" type="text" placeholder="읍/면/동 주소를 입력해주세요.">
+            <input ref="addressElRef" class="form-row-input" type="text" placeholder="시/도 주소를 입력해주세요.">
           </FormRow>
           <FormRow title="가입">
             <div class="btns">
@@ -54,7 +48,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, getCurrentInstance, onMounted } from 'vue'
-import { MainApi } from '../apis/'
+import { MainApi } from '../apis'
 import { Router } from 'vue-router';
 
 export default defineComponent({
@@ -76,9 +70,8 @@ export default defineComponent({
     const nicknameElRef = ref<HTMLInputElement>();
     const cellphoneNoElRef = ref<HTMLInputElement>();
     const emailElRef = ref<HTMLInputElement>();
-    const address_stateElRef = ref<HTMLInputElement>();
-    const address_cityElRef = ref<HTMLInputElement>();
-    const address_streetElRef = ref<HTMLInputElement>();
+    const addressElRef = ref<HTMLInputElement>();
+
    
     function checkAndJoin() {
        // 아이디 체크
@@ -178,46 +171,20 @@ export default defineComponent({
       }
 
       // 시/도 주소 체크
-      if ( address_stateElRef.value == null ) {
+      if ( addressElRef.value == null ) {
         return;
       }
       
-      const address_stateEl = address_stateElRef.value;
-      address_stateEl.value = address_stateEl.value.trim();
+      const addressEl = addressElRef.value;
+      addressEl.value = addressEl.value.trim();
       
-      if ( address_stateEl.value.length == 0 ) {
+      if ( addressEl.value.length == 0 ) {
         alert('시/도를 입력해주세요.');
-        address_stateEl.focus();
+        addressEl.focus();
         return;
       }
       
-      // 시/군/구 체크
-      if ( address_cityElRef.value == null ) {
-        return;
-      }
       
-      const address_cityEl = address_cityElRef.value;
-      address_cityEl.value = address_cityEl.value.trim();
-      
-      if ( address_cityEl.value.length == 0 ) {
-        alert('시/군/구를 입력해주세요.');
-        address_cityEl.focus();
-        return;
-      }
-
-      // 읍/면/동 체크
-      if ( address_streetElRef.value == null ) {
-        return;
-      }
-      
-      const address_streetEl = address_streetElRef.value;
-      address_streetEl.value = address_streetEl.value.trim();
-      
-      if ( address_streetEl.value.length == 0 ) {
-        alert('읍/면/동을 입력해주세요.');
-        address_streetEl.focus();
-        return;
-      }
       
       
       const startFileUpload = (onSuccess:Function) => {
@@ -249,7 +216,7 @@ export default defineComponent({
       //파일첨부기능 추가로 인해 로직 변경
       //join(loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value);
       const startJoin = (genFileIdsStr:string) =>{
-        join(loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value, address_stateEl.value, address_cityEl.value, address_streetEl.value, genFileIdsStr);
+        join(loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value, addressEl.value,  genFileIdsStr);
       };
 
       //startFileUpload 로직을 먼저 실행한 후
@@ -260,8 +227,8 @@ export default defineComponent({
 
       
     }
-    function join(loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address_state:string, address_city:string, address_street:string, genFileIdsStr:string) {
-      mainApi.client_doJoin(loginId, loginPw, name, nickname, cellphoneNo, email, address_state, address_city, address_street, genFileIdsStr)
+    function join(loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
+      mainApi.member_doJoin(loginId, loginPw, name, nickname, cellphoneNo, email, address, genFileIdsStr)
         .then(axiosResponse => {
           
           alert(axiosResponse.data.msg);
@@ -269,7 +236,7 @@ export default defineComponent({
             return;
           }
           
-          router.replace('/client/login?loginId=' + loginId)
+          router.replace('/member/login?loginId=' + loginId)
         });
     }
     return {
@@ -282,10 +249,7 @@ export default defineComponent({
       nicknameElRef,
       cellphoneNoElRef,
       emailElRef,
-      address_stateElRef,
-      address_cityElRef,
-      address_streetElRef
-
+      addressElRef
     }
   }
 })

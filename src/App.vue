@@ -9,8 +9,8 @@
 
       <div class="flex-grow"></div>
 
-      <router-link v-if="globalShare.isLogined && !!globalShare.loginedClient.profileImgUrl" to="/client/mypage" class="header-bar__profile-img flex items-center">
-        <img :src="'http://localhost:8090' + globalShare.loginedClient.profileImgUrl" class="rounded-full" width="40" height="40" alt="">
+      <router-link v-if="globalShare.isLogined && !!globalShare.loginedMember.profileImgUrl" to="/member/mypage" class="header-bar__profile-img flex items-center">
+        <img :src="'http://localhost:8090' + globalShare.loginedMember.profileImgUrl" class="rounded-full" width="40" height="40" alt="">
       </router-link>
 
       <nav class="header-bar__menu-box-1 overflow-x-auto ml-2">
@@ -31,12 +31,12 @@
             </router-link>
           </li>
           <li v-if="globalShare.isLogined == false">
-            <router-link to="/client/join" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
+            <router-link to="/member/join" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
               Sign-up
             </router-link>
           </li>
           <li v-if="globalShare.isLogined == false">
-            <router-link to="/client/login" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+            <router-link to="/member/login" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               Log-in
             </router-link>
           </li>

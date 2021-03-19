@@ -9,7 +9,7 @@ export interface IArticle {
   extra__writer:string;
 }
 
-export interface IDirector {
+export interface IMember {
   id:number;
   regDate:string;
   updateDate:string;
@@ -21,26 +21,6 @@ export interface IDirector {
   nickname:string;
   cellphoneNo:string;
   email:string;
-  address_state:string;
-	address_city:string;
-	address_street:string;
-  extra__thumbImg:string;
-}
-
-export interface IClient {
-  id:number;
-  regDate:string;
-  updateDate:string;
-  loginId:string;
-  loginPw:string;
-  authLevel:number;
-  authKey:string;
-  name:string;
-  nickname:string;
-  cellphoneNo:string;
-  email:string;
-  address_state:string;
-	address_city:string;
-	address_street:string;
+  address:string;
   extra__thumbImg:string;
 }
