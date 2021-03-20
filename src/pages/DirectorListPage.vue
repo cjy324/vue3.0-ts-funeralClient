@@ -26,6 +26,9 @@
           <router-link to="/member/profile" class="text-indigo-500 font-bold text-xl md:text-2xl hover:text-gray-700">
             {{ member.name }}
           </router-link>
+          <router-link :to="'/member/profile?id=' + member.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
+          상세보기
+        </router-link>
         </div>
         <!--소개멘트-->
         <h1 class="font-semibold text-gray-900 leading-none text-xl mt-1 mb-3 capitalize break-normal">
@@ -104,13 +107,13 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, getCurrentInstance, onMounted, computed, watch } from 'vue'
-import { IMember } from '../types/'
-import { MainApi } from '../apis/'
+import { IMember } from '../types'
+import { MainApi } from '../apis'
 
 const searchKeywordElRef = ref<HTMLInputElement>();
 
 export default defineComponent({
-  name: 'DirectorList',
+  name: 'DirectorListPage',
 
 //props 속성은 컴포넌트 간에 데이터를 전달할 수 있는 컴포넌트 통신 방법입니다. 
 //props 속성을 기억할 때는 상위 컴포넌트에서 하위 컴포넌트로 내려보내는 데이터 속성으로 기억하면 쉽습니다
@@ -124,17 +127,12 @@ export default defineComponent({
   setup(props){
     const mainApi:MainApi = getCurrentInstance()?.appContext.config.globalProperties.$mainApi;
 
-    const state:any = reactive({
+    const state = reactive({
       members: [] as IMember[],
-      searchKeyword: '' as String,
-      result:'' as String,
+      searchKeyword: '' as string,
+      result:'' as string,
+      
     });
-
-    
-    //21.03.19 
-    // DB에서 memberlist 가져오기 안됨..
-    // members 자체를 못갖고 옴
-    // DB나 vue 로직 검토 필요..
 
     let searchKeywordType = "name";
 

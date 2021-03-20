@@ -13,12 +13,14 @@ import TitleBar from './components/TitleBar.vue';
 import FormRow from './components/FormRow.vue';
 
 // 각 페이지 불러오기
-import HomeMain from './pages/HomeMain.vue'
-import DirectorList from './pages/DirectorList.vue'
-import DirectorProfile from './pages/DirectorProfile.vue'
+import HomeMainPage from './pages/HomeMainPage.vue'
+import DirectorListPage from './pages/DirectorListPage.vue'
+import DirectorProfilePage from './pages/DirectorProfilePage.vue'
 import MemberJoinPage from './pages/MemberJoinPage.vue'
 import MemberLoginPage from './pages/MemberLoginPage.vue'
-import OrderPage from './pages/OrderPage.vue'
+import AddOrderPage from './pages/AddOrderPage.vue'
+import OrderDetailPage from './pages/OrderDetailPage.vue'
+import OrderListPage from './pages/OrderListPage.vue'
 
 
 // 전역state 만들기
@@ -74,16 +76,16 @@ const mainApi = new MainApi();
 const routes = [
   { 
     path: '/', 
-    component: HomeMain 
+    component: HomeMainPage
   },
   { 
     path: '/director/list', 
-    component: DirectorList, 
+    component: DirectorListPage, 
     props: (route:any) => ({ globalShare })
   },
   { 
     path: '/director/profile', 
-    component: DirectorProfile 
+    component: DirectorProfilePage
   },
   {
     path: '/member/join',
@@ -97,8 +99,18 @@ const routes = [
   },
   {
     path: '/order/doAdd',
-    component: OrderPage,
-    props: (route:any) => ({globalShare})
+    component: AddOrderPage,
+    props: (route:any) => ({directorId: Util.toIntOrUnd(route.query.directorId), globalShare})
+  },
+  {
+    path: '/order/detail',
+    component: OrderDetailPage,
+    props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
+  },
+  {
+    path: '/order/list',
+    component: OrderListPage,
+    props: (route:any) => ({memberId: Util.toIntOrUnd(route.query.memberId), globalShare})
   },
 
 ];

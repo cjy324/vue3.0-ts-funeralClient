@@ -8,6 +8,13 @@
           <FormRow title="프로필 이미지">
             <input ref="profileImgElRef" class="form-row-input" type="file" placeholder="프로필 이미지를 선택해 주세요.">
           </FormRow>
+          <FormRow title="회원유형">
+            <select ref="authLevelElRef" name="" id="">
+              <option value="3">일반회원</option>
+              <option value="4">도우미</option>
+              <option value="5">지도사</option>
+            </select>
+          </FormRow>
           <FormRow title="아이디">
             <input ref="loginIdElRef" class="form-row-input" type="text" placeholder="아이디를 입력해주세요.">
           </FormRow>
@@ -63,6 +70,7 @@ export default defineComponent({
     const router:Router = getCurrentInstance()?.appContext.config.globalProperties.$router;
     const mainApi:MainApi = getCurrentInstance()?.appContext.config.globalProperties.$mainApi;
     const profileImgElRef = ref<HTMLInputElement>();
+    const authLevelElRef = ref<HTMLInputElement>();
     const loginIdElRef = ref<HTMLInputElement>();
     const loginPwElRef = ref<HTMLInputElement>();
     const loginPwConfirmElRef = ref<HTMLInputElement>();
@@ -183,9 +191,14 @@ export default defineComponent({
         addressEl.focus();
         return;
       }
+
+     
+
+      if(authLevelElRef.value == null){
+        return
+      }
       
-      
-      
+      const authLevelEl = authLevelElRef.value;
       
       const startFileUpload = (onSuccess:Function) => {
         // ! => 반전
@@ -216,7 +229,7 @@ export default defineComponent({
       //파일첨부기능 추가로 인해 로직 변경
       //join(loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value);
       const startJoin = (genFileIdsStr:string) =>{
-        join(loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value, addressEl.value,  genFileIdsStr);
+        join(parseInt(authLevelEl.value), loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value, addressEl.value,  genFileIdsStr);
       };
 
       //startFileUpload 로직을 먼저 실행한 후
@@ -227,8 +240,8 @@ export default defineComponent({
 
       
     }
-    function join(loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
-      mainApi.member_doJoin(loginId, loginPw, name, nickname, cellphoneNo, email, address, genFileIdsStr)
+    function join(authLevel:number, loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
+      mainApi.member_doJoin(authLevel, loginId, loginPw, name, nickname, cellphoneNo, email, address, genFileIdsStr)
         .then(axiosResponse => {
           
           alert(axiosResponse.data.msg);
@@ -242,6 +255,7 @@ export default defineComponent({
     return {
       checkAndJoin,
       profileImgElRef,
+      authLevelElRef,
       loginIdElRef,
       loginPwElRef,
       loginPwConfirmElRef,

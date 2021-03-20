@@ -30,6 +30,11 @@
               DIRECTOR
             </router-link>
           </li>
+          <li v-if="globalShare.isLogined">
+            <router-link :to="'/order/list?memberId='+ globalShare.loginedMember.id" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+              ORDER LIST
+            </router-link>
+          </li>
           <li v-if="globalShare.isLogined == false">
             <router-link to="/member/join" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
               Sign-up

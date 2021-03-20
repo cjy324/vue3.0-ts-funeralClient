@@ -4,7 +4,7 @@
 //axios: ajax통신을 받아오는 것
 //@types/axios: typescript에서 axios를 다루는데 도움이 되는 정보들
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import {IArticle, IMember} from '../types'
+import {IOrder, IMember} from '../types'
 
 // API 원형
 abstract class HttpClient {
@@ -97,16 +97,16 @@ interface Base__IResponseBodyType1 {
 }
 
 // /usr/article/list 의 응답 타입
-export interface MainApi__article_list__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__order_list__IResponseBody extends Base__IResponseBodyType1 {
   body:{
-    articles: IArticle[]
+    orders: IOrder[]
   };
 }
 
 // /usr/article/detail 의 응답 타입
-export interface MainApi__article_detail__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__order_detail__IResponseBody extends Base__IResponseBodyType1 {
   body:{
-    article: IArticle
+    order: IOrder
   };
 }
 
@@ -135,6 +135,9 @@ export interface MainApi__member_authKey__IResponseBody extends Base__IResponseB
 // /usr/member/list 의 응답 타입
 export interface MainApi__director_list__IResponseBody extends Base__IResponseBodyType1 {
   body:{
+    //응답을 받기위해선 key명이 백엔드와 동일해야 함
+    //또한 백엔드로부터 ResultData와 같이 json형태로 받아야 함
+    //ex) return new ResultData("S-1", "성공", "members", members);
     members: IMember[]
   };
 }
@@ -189,33 +192,34 @@ export class MainApi extends HttpClient {
   }
 
   // http://localhost:8090/usr/article/list?boardId=? 를 요청하고 응답을 받아오는 함수
-  public article_list(boardId: number) {
-    return this.get<MainApi__article_list__IResponseBody>(`/usr/article/list?boardId=${boardId}`);
+  public order_list(memberId:number) {
+    return this.get<MainApi__order_list__IResponseBody>(`/usr/order/list?memberId=${memberId}`);
   }
 
   // http://localhost:8090/usr/detail/id?id=? 를 요청하고 응답을 받아오는 함수
-  public article_detail(id: number) {
-    return this.get<MainApi__article_detail__IResponseBody>(`/usr/article/detail?id=${id}`);
+  public order_detail(id: number) {
+    return this.get<MainApi__order_detail__IResponseBody>(`/usr/order/detail?id=${id}`);
   }
 
   // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
    // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-   public order_doAdd(option1:string, option1qty:number, option2:string, option2qty:number, option3:string, option3qty:number, option4:string, option4qty:number, option5:string, option5qty:number, body:string, directorId:number, clientId:number) {
+   public order_doAdd(title:string, option1:string, option1qty:number, option2:string, option2qty:number, option3:string, option3qty:number, option4:string, option4qty:number, option5:string, option5qty:number, body:string, directorId:number, clientId:number) {
     return this.postByForm<MainApi__order_doAdd__IResponseBody>(
       `/usr/order/doAdd`, {
-    option1,
-    option1qty,
-    option2,
-    option2qty,
-    option3,
-    option3qty,
-    option4,
-    option4qty,
-    option5,
-    option5qty,
-    body,
-    directorId,
-    clientId
+        title,
+        option1,
+        option1qty,
+        option2,
+        option2qty,
+        option3,
+        option3qty,
+        option4,
+        option4qty,
+        option5,
+        option5qty,
+        body,
+        directorId,
+        clientId
       }
     );
   }
@@ -225,9 +229,10 @@ export class MainApi extends HttpClient {
 
   // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
    // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-   public member_doJoin(loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
+   public member_doJoin(authLevel:number, loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
     return this.postByForm<MainApi__member_doJoin__IResponseBody>(
       `/usr/member/doJoin`, {
+        authLevel,
         loginId,
         loginPw,
         name,
