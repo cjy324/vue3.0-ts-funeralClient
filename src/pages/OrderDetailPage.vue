@@ -5,7 +5,13 @@
   <section class="section section-order-write-form-box px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
-        <div v-if="(state.order.id !== undefined && globalShare.loginedMember.id === state.order.clientId) || (state.order.id !== undefined && globalShare.loginedMember.id === state.order.directorId)">
+        <div v-if="state.order.id !== undefined && globalShare.loginedMember.id === state.order.clientId">
+          <div title="진행단계">
+            <div class="btn-success">
+              진행단계 : 
+              {{state.order.stepLevel}}
+            </div>
+          </div>
           <div title="제목">
             <div>
               제목 : 
@@ -16,6 +22,12 @@
             <div>
               의뢰인 :
               {{state.order.extra__member}}
+            </div>
+          </div>
+          <div title="장례식장">
+            <div>
+              장례식장 : 
+              {{state.order.funeralHome}}
             </div>
           </div>
           <div title="옵션1">
@@ -45,14 +57,15 @@
           </div>
           <div>
             <div class="btns">
-              <button class="btn-primary">수정</button>
+              <router-link v-if="globalShare.loginedMember.id === state.order.clientId" class="btn-secondary" :to="'/order/doModify?id=' + state.order.id">수정</router-link>
+              <router-link v-if="globalShare.loginedMember.id === state.order.clientId" class="btn-danger" to="doDelete">삭제</router-link>
               <button class="btn-primary">취소</button>
             </div>
           </div>
         </div>
         <!-- 의뢰인/전문가 구분방법 고민 필요... -->
-        <div v-if="globalShare.loginedMember.id !== state.order.clientId || globalShare.loginedMember.id !== state.order.directorId">
-          <p>해당 요청페이지에 대한 권한이 없습니다.</p>
+        <div v-if="globalShare.loginedMember.id !== state.order.clientId">
+          <p>해당 요청서에 대한 권한이 없습니다.</p>
           <router-link class="btn-link" to="/home/main">홈</router-link>으로 이동
         </div>
         <div v-if="globalShare.loginedMember.id == null">

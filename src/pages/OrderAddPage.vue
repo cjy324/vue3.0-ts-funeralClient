@@ -9,6 +9,9 @@
           <FormRow title="제목">
             <input ref="newOrderTitleElRef" class="form-row-input" type="text" placeholder="제목을 입력해주세요.">
           </FormRow>
+          <FormRow title="장례식장">
+            <input ref="newOrderFuneralHomeElRef" class="form-row-input" type="text" placeholder="장례식장명을 입력해주세요.">
+          </FormRow>
           <FormRow title="옵션1">
             <input ref="newOrderOption1ElRef" class="form-row-input" type="text" placeholder="옵션1을 입력해주세요.">
             <select ref="newOrderOption1qtyElRef" name="option1qty" class="form-row-input w-full rounded-sm">
@@ -85,7 +88,7 @@ import { Router } from 'vue-router'
 
 
 export default defineComponent({
-  name: 'AddOrderPage',
+  name: 'OrderAddPage',
 
   props: {
     globalShare: {
@@ -103,6 +106,7 @@ export default defineComponent({
     const mainApi:MainApi = getCurrentInstance()?.appContext.config.globalProperties.$mainApi;
 
     const newOrderTitleElRef = ref<HTMLInputElement>();
+    const newOrderFuneralHomeElRef = ref<HTMLInputElement>();
     const newOrderOption1ElRef = ref<HTMLInputElement>();
     const newOrderOption1qtyElRef = ref<HTMLInputElement>();
     const newOrderOption2ElRef = ref<HTMLInputElement>();
@@ -130,6 +134,20 @@ export default defineComponent({
       if(newOrderTitleEl.value.length == 0){
         alert('제목을 입력해 주세요.')
         newOrderTitleEl.focus();
+        return;
+      }
+
+      //장례식장
+      if(newOrderFuneralHomeElRef.value == null){
+        return;
+      }
+
+      const newOrderFuneralHomeEl = newOrderFuneralHomeElRef.value;
+      newOrderFuneralHomeEl.value = newOrderFuneralHomeEl.value.trim();
+
+      if(newOrderFuneralHomeEl.value.length == 0){
+        alert('장례식장명을 입력해 주세요.')
+        newOrderFuneralHomeEl.focus();
         return;
       }
 
@@ -254,14 +272,14 @@ export default defineComponent({
       }
 
       // 작성 함수로 보내기
-      addOrder(newOrderTitleEl.value, newOrderOption1El.value, parseInt(newOrderOption1qtyEl.value), newOrderOption2El.value, parseInt(newOrderOption2qtyEl.value), newOrderOption3El.value, parseInt(newOrderOption3qtyEl.value), newOrderOption4El.value, parseInt(newOrderOption4qtyEl.value), newOrderOption5El.value, parseInt(newOrderOption5qtyEl.value), newOrderBodyEl.value, props.directorId, props.globalShare.loginedMember.id);
+      addOrder(newOrderTitleEl.value, newOrderFuneralHomeEl.value, newOrderOption1El.value, parseInt(newOrderOption1qtyEl.value), newOrderOption2El.value, parseInt(newOrderOption2qtyEl.value), newOrderOption3El.value, parseInt(newOrderOption3qtyEl.value), newOrderOption4El.value, parseInt(newOrderOption4qtyEl.value), newOrderOption5El.value, parseInt(newOrderOption5qtyEl.value), newOrderBodyEl.value, props.directorId, props.globalShare.loginedMember.id);
 
     }
 
     //typescript에서는 title:string, body:string 이런식으로 type을 적어주어야 한다
-      function addOrder(title:string, option1:string, option1qty:number, option2:string, option2qty:number, option3:string, option3qty:number, option4:string, option4qty:number, option5:string, option5qty:number, body:string, directorId:number, clientId:number){
+      function addOrder(title:string, funeralHome:string, option1:string, option1qty:number, option2:string, option2qty:number, option3:string, option3qty:number, option4:string, option4qty:number, option5:string, option5qty:number, body:string, directorId:number, clientId:number){
        
-        mainApi.order_doAdd(title, option1, option1qty, option2, option2qty, option3, option3qty, option4, option4qty, option5, option5qty, body, directorId, clientId)
+        mainApi.order_doAdd(title, funeralHome, option1, option1qty, option2, option2qty, option3, option3qty, option4, option4qty, option5, option5qty, body, directorId, clientId)
         .then(axiosResponse => {
           alert(axiosResponse.data.msg);
           
@@ -280,6 +298,7 @@ export default defineComponent({
 
     return{
         newOrderTitleElRef,
+        newOrderFuneralHomeElRef,
         newOrderOption1ElRef,
         newOrderOption1qtyElRef,
         newOrderOption2ElRef,

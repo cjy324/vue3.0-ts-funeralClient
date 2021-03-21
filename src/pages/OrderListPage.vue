@@ -1,5 +1,5 @@
 <template>
-  <!-- 메인-지도사 리스트 시작 -->
+  <!-- 메인-요청 리스트 시작 -->
   <section class="orderList-section bg-gray-500">
     <div class="h-2 bg-gray-500"></div>
     <!--리스트 search 시작-->
@@ -7,6 +7,8 @@
       <select class="h-full w-1/4 rounded-l-md" id="" @change="onChangeSearchKeywordType($event)">
         <option value="title">제목</option>
         <option value="body">내용</option>
+        <option value="stepLevel">진행단계</option>
+        <option value="funeralHome">장례식장</option>
       </select>
       <input id="searchKeywordElRef" ref="searchKeywordElRef" class="h-full w-full pl-4" type="text" placeholder="검색어 입력" :value="searchKeyword" @keyup.enter="onInput($event)" >
       <button class="w-20 text-white rounded-r-md bg-blue-500" type="button">검색</button>
@@ -17,48 +19,56 @@
       <!--리스트 grid__body 시작-->
       <div class="mt-6" v-bind:key="order.id" v-for="order in filteredOrders">
       <div class="orderList-section-grid__body p-8 bg-white m-2 border rounded-xl">
-        <!--이름-->
+        <!--진행단계-->
+        <div class="btn-success">
+          진행단계: {{order.stepLevel}}
+        </div>
+        <!--제목-->
         <div class="text-center m-4">
           <router-link :to="'/order/detail?id=' + order.id" class="text-indigo-500 font-bold text-xl md:text-2xl hover:text-gray-700">
             {{ order.title }}
           </router-link>
         </div>
-        <!--소개멘트-->
+        <!--의뢰인명-->
         <h1 class="font-semibold text-gray-900 leading-none text-xl mt-1 mb-3 capitalize break-normal">
           의뢰인: {{order.extra__member}}
+        </h1>
+         <!--장례식장-->
+        <h1 class="font-semibold text-gray-900 leading-none text-xl mt-1 mb-3 capitalize break-normal">
+          장례식장: {{order.funeralHome}}
         </h1>
         <!--옵션-->
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
           옵션1
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - 이름: {{ order.option1 }} / 수량: {{ order.option1qty }}
+            - 내용: {{ order.option1 }} / 수량: {{ order.option1qty }}
           </p>
         </div>
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
           옵션2
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - 이름: {{ order.option2 }} / 수량: {{ order.option2qty }}
+            - 내용: {{ order.option2 }} / 수량: {{ order.option2qty }}
           </p>
         </div>
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
           옵션3
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - 이름: {{ order.option3 }} / 수량: {{ order.option3qty }}
+            - 내용: {{ order.option3 }} / 수량: {{ order.option3qty }}
           </p>
         </div>
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
           옵션4
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - 이름: {{ order.option4 }} / 수량: {{ order.option4qty }}
+            - 내용: {{ order.option4 }} / 수량: {{ order.option4qty }}
           </p>
         </div>
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
           옵션5
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - 이름: {{ order.option5 }} / 수량: {{ order.option5qty }}
+            - 내용: {{ order.option5 }} / 수량: {{ order.option5qty }}
           </p>
         </div>
-        <!--활동이력-->
+        <!--추가 요청 내용-->
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
           추가 요청사항
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
@@ -135,6 +145,12 @@ export default defineComponent({
         filteredOrders = state.orders.filter((order:IOrder) => order.title.includes(state.searchKeyword))
       }
       if(searchKeywordType == "body"){
+        filteredOrders = state.orders.filter((order:IOrder) => order.body.includes(state.searchKeyword))
+      }
+      if(searchKeywordType == "stepLevel"){
+        filteredOrders = state.orders.filter((order:IOrder) => order.body.includes(state.searchKeyword))
+      }
+      if(searchKeywordType == "funeralHome"){
         filteredOrders = state.orders.filter((order:IOrder) => order.body.includes(state.searchKeyword))
       }
       return filteredOrders

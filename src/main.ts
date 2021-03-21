@@ -18,9 +18,13 @@ import DirectorListPage from './pages/DirectorListPage.vue'
 import DirectorProfilePage from './pages/DirectorProfilePage.vue'
 import MemberJoinPage from './pages/MemberJoinPage.vue'
 import MemberLoginPage from './pages/MemberLoginPage.vue'
-import AddOrderPage from './pages/AddOrderPage.vue'
+import MemberMyPage from './pages/MemberMyPage.vue'
+import MemberModifyPage from './pages/MemberModifyPage.vue'
+import OrderAddPage from './pages/OrderAddPage.vue'
 import OrderDetailPage from './pages/OrderDetailPage.vue'
 import OrderListPage from './pages/OrderListPage.vue'
+import OrderModifyPage from './pages/OrderModifyPage.vue'
+
 
 
 // 전역state 만들기
@@ -33,6 +37,7 @@ const loginedMemberId  = Util.toIntOrNull(localStorage.getItem("loginedMemberId"
 const loginedMemberName = Util.toStringOrNull(localStorage.getItem("loginedMemberName"))
 const loginedMemberNickname  = Util.toStringOrNull(localStorage.getItem("loginedMemberNickname"))
 const loginedMemberProfileImgUrl  = Util.toStringOrNull(localStorage.getItem("loginedMemberProfileImgUrl"))
+
 
 /*state => 상태
 페이지 글과 같은 state는 전역적으로 필요하지 않음
@@ -98,8 +103,18 @@ const routes = [
     props: (route:any) => ({globalShare})
   },
   {
+    path: '/member/detail',
+    component: MemberMyPage,
+    props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
+  },
+  {
+    path: '/member/doModify',
+    component: MemberModifyPage,
+    props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
+  },
+  {
     path: '/order/doAdd',
-    component: AddOrderPage,
+    component: OrderAddPage,
     props: (route:any) => ({directorId: Util.toIntOrUnd(route.query.directorId), globalShare})
   },
   {
@@ -111,6 +126,11 @@ const routes = [
     path: '/order/list',
     component: OrderListPage,
     props: (route:any) => ({memberId: Util.toIntOrUnd(route.query.memberId), globalShare})
+  },
+  {
+    path: '/order/doModify',
+    component: OrderModifyPage,
+    props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
   },
 
 ];

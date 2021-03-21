@@ -142,10 +142,33 @@ export interface MainApi__director_list__IResponseBody extends Base__IResponseBo
   };
 }
 
-// /usr/member/doOrder 의 응답 타입
+// /usr/member/detail 의 응답 타입
+export interface MainApi__member_detail__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    member: IMember
+  };
+}
+
+// /usr/member/doModify 의 응답 타입
+export interface MainApi__member_doModify__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    member: IMember,
+    id: number
+  };
+}
+
+// /usr/order/doAdd 의 응답 타입
 export interface MainApi__order_doAdd__IResponseBody extends Base__IResponseBodyType1 {
   body:{
     id: number
+  };
+}
+
+// /usr/order/doModify 의 응답 타입
+export interface MainApi__order_doModify__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number,
+    order: IOrder
   };
 }
 
@@ -202,11 +225,37 @@ export class MainApi extends HttpClient {
   }
 
   // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
-   // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-   public order_doAdd(title:string, option1:string, option1qty:number, option2:string, option2qty:number, option3:string, option3qty:number, option4:string, option4qty:number, option5:string, option5qty:number, body:string, directorId:number, clientId:number) {
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public order_doAdd(title:string, funeralHome:string, option1:string, option1qty:number, option2:string, option2qty:number, option3:string, option3qty:number, option4:string, option4qty:number, option5:string, option5qty:number, body:string, directorId:number, clientId:number) {
     return this.postByForm<MainApi__order_doAdd__IResponseBody>(
       `/usr/order/doAdd`, {
         title,
+        funeralHome,
+        option1,
+        option1qty,
+        option2,
+        option2qty,
+        option3,
+        option3qty,
+        option4,
+        option4qty,
+        option5,
+        option5qty,
+        body,
+        directorId,
+        clientId
+      }
+    );
+  }
+
+  // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public order_doModify(id:number, title:string, funeralHome:string, option1:string, option1qty:number, option2:string, option2qty:number, option3:string, option3qty:number, option4:string, option4qty:number, option5:string, option5qty:number, body:string, directorId:number, clientId:number) {
+    return this.postByForm<MainApi__order_doModify__IResponseBody>(
+      `/usr/order/doModify`, {
+        id,
+        title,
+        funeralHome,
         option1,
         option1qty,
         option2,
@@ -228,8 +277,8 @@ export class MainApi extends HttpClient {
   /* Member 관련 */
 
   // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
-   // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-   public member_doJoin(authLevel:number, loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public member_doJoin(authLevel:number, loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
     return this.postByForm<MainApi__member_doJoin__IResponseBody>(
       `/usr/member/doJoin`, {
         authLevel,
@@ -264,12 +313,34 @@ export class MainApi extends HttpClient {
     );
   }
 
+  // http://localhost:8090/usr/detail/id?id=? 를 요청하고 응답을 받아오는 함수
+  public member_detail(id: number) {
+    return this.get<MainApi__member_detail__IResponseBody>(`/usr/member/detail?id=${id}`);
+  }
 
   // http://localhost:8090/usr/member/list?boardId=? 를 요청하고 응답을 받아오는 함수
   public director_list() {
     return this.get<MainApi__director_list__IResponseBody>(`/usr/director/list`);
   }
 
+  // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public member_doModify(id:number, authLevel:number, loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
+    return this.postByForm<MainApi__member_doModify__IResponseBody>(
+      `/usr/member/doModify`, {
+        id,
+        authLevel,
+        loginId,
+        loginPw,
+        name,
+        nickname,
+        cellphoneNo,
+        email,
+        address,
+        genFileIdsStr
+      }
+    );
+  }
    
 
   

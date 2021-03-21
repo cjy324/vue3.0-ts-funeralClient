@@ -13,9 +13,11 @@ export interface IOrder {
 	option5:string;
 	option5qty:number;
 	title:string;
+  funeralHome:string;
 	body:string;
 	directorId:number;
 	clientId:number;
+  stepLevel:number;
   extra__member:string;
 }
 
