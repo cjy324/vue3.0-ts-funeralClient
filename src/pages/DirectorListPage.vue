@@ -15,7 +15,8 @@
     <!--리스트 grid 시작-->
     <div class="memberList-section-grid grid grid-cols-1 md:grid-cols-3 gap-3 overflow-hidden">
       <!--리스트 grid__body 시작-->
-      <div class="mt-6" v-bind:key="member.id" v-for="member in filteredMembers">
+      <template v-bind:key="member.id" v-for="member in filteredMembers">
+      <div class="mt-6">
       <div class="memberList-section-grid__body p-8 bg-white m-2 border rounded-xl">
         <!--프로필 이미지-->
         <div class="flex justify-center overflow-hidden">
@@ -77,26 +78,22 @@
             더보기
           </div>
         </div>
-        <div class="mt-2 border-b-2 border-t-2">
+        <!--template를 활용하면 v-for문 내 v-for문 즉, 이중v-for문 사용이 가능해진다.-->
+        <!--또한, vue3.0부터는 동일 태그내에 v-for랑 v-if를 사용할 수 없는 것 같다.(권장하는 방법이 아닌듯..) -->
+        <!--하지만 template를 활용해 v-for를 분리해주면 v-for와 v-if를 동시에 사용가능해진다. -->
+        <template v-bind:key="review.id" v-for="review in state.reviews" >
+        <div class="mt-2 border-b-2 border-t-2" v-if="review.relId === member.id">
             <p class="text-gray-900 p-2">
-              후기를 작성합니다. Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              {{review.body}}
             </p>
             <p class="text-gray-500 p-2 text-sm">
-              2021-03-11 15:15:15
+              {{review.updateDate}}
             </p>
         </div>
-        <!--후기-->
-        <div class="mt-2 border-b-2 border-t-2">
-            <p class="text-gray-900 p-2">
-              후기를 작성합니다. ipsum, sapiente earum voluptates reiciendis fuga sit! Minima quaerat sit sed iusto consectetur.
-            </p>
-            <p class="text-gray-500 p-2 text-sm">
-              2021-03-11 15:15:15
-            </p>
-        </div>
-        
+        </template>
       </div>
       </div>
+      </template>
       <!--리스트 grid__body 끝-->
     </div>
     <!--리스트 grid 끝-->
@@ -107,7 +104,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, getCurrentInstance, onMounted, computed, watch } from 'vue'
-import { IMember } from '../types'
+import { IMember, IReview } from '../types'
 import { MainApi } from '../apis'
 
 const searchKeywordElRef = ref<HTMLInputElement>();
@@ -131,7 +128,8 @@ export default defineComponent({
       members: [] as IMember[],
       searchKeyword: '' as string,
       result:'' as string,
-      
+      reviews: [] as IReview[],
+
     });
 
     let searchKeywordType = "name";
@@ -171,10 +169,21 @@ export default defineComponent({
 
     }
 
+    const relTypeCode = 'director';
+
+    function loadReviews(relTypeCode:string){
+      mainApi.review_list(relTypeCode)
+      .then(axiosResponse => {
+          state.reviews = axiosResponse.data.body.reviews;
+      });
+
+    }
+
     // onMounted 바로 실행하는 것이 아닌 모든 것이 준비되었을때 실행됨
     onMounted(() => {
       //alert("3");
       loadMembers();
+      loadReviews(relTypeCode);
     });
 
     return{

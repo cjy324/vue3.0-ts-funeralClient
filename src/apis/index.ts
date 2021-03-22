@@ -4,7 +4,7 @@
 //axios: ajax통신을 받아오는 것
 //@types/axios: typescript에서 axios를 다루는데 도움이 되는 정보들
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import {IOrder, IMember} from '../types'
+import {IOrder, IMember, IReview} from '../types'
 
 // API 원형
 abstract class HttpClient {
@@ -171,6 +171,24 @@ export interface MainApi__order_doModify__IResponseBody extends Base__IResponseB
     order: IOrder
   };
 }
+
+// /usr/review/doAdd 의 응답 타입
+export interface MainApi__review_doAdd__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number
+  };
+}
+
+// /usr/member/list 의 응답 타입
+export interface MainApi__review_list__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    reviews: IReview[]
+  };
+}
+
+
+
+
 
 // http://localhost:8090/ 와의 통신장치
 export class MainApi extends HttpClient {
@@ -340,6 +358,26 @@ export class MainApi extends HttpClient {
         genFileIdsStr
       }
     );
+  }
+
+
+  // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public review_doAdd(relTypeCode:string, relId:number, body:string, memberId:number) {
+    return this.postByForm<MainApi__review_doAdd__IResponseBody>(
+      `/usr/review/doAdd`, {
+        relTypeCode,
+        relId,
+        body,
+        memberId,
+        
+      }
+    );
+  }
+
+  // http://localhost:8090/usr/member/list?boardId=? 를 요청하고 응답을 받아오는 함수
+  public review_list(relTypeCode:string) {
+    return this.get<MainApi__review_list__IResponseBody>(`/usr/review/list?relTypeCode=${relTypeCode}`);
   }
    
 

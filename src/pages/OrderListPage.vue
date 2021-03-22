@@ -78,6 +78,9 @@
         <router-link :to="'/order/detail?id=' + order.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
             상세보기
         </router-link>
+        <router-link :to="'/review/doAdd?relTypeCode=director&relId=' + order.directorId" class="block btn-secondary mt-2 h-10 w-full rounded-md">
+            후기/평점 작성
+        </router-link>
         
       </div>
       </div>
@@ -172,6 +175,7 @@ export default defineComponent({
       //alert("3");
       loadOrders(memberId);
     });
+
 
     return{
       state,

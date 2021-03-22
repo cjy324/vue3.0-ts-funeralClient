@@ -24,7 +24,7 @@ import OrderAddPage from './pages/OrderAddPage.vue'
 import OrderDetailPage from './pages/OrderDetailPage.vue'
 import OrderListPage from './pages/OrderListPage.vue'
 import OrderModifyPage from './pages/OrderModifyPage.vue'
-
+import ReviewAddPage from './pages/ReviewAddPage.vue'
 
 
 // 전역state 만들기
@@ -131,6 +131,11 @@ const routes = [
     path: '/order/doModify',
     component: OrderModifyPage,
     props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
+  },
+  {
+    path: '/review/doAdd',
+    component: ReviewAddPage,
+    props: (route:any) => ({relTypeCode: route.query.relTypeCode, relId: Util.toIntOrUnd(route.query.relId), globalShare})
   },
 
 ];

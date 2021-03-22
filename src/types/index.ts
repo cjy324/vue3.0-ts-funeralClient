@@ -1,7 +1,12 @@
-export interface IOrder {
+//중복되는 것 
+export interface IEntity {
   id:number;
   regDate:string;
   updateDate:string;
+}
+
+
+export interface IOrder extends IEntity {
   option1:string;
 	option1qty:number;
 	option2:string;
@@ -21,10 +26,7 @@ export interface IOrder {
   extra__member:string;
 }
 
-export interface IMember {
-  id:number;
-  regDate:string;
-  updateDate:string;
+export interface IMember extends IEntity {
   loginId:string;
   loginPw:string;
   authLevel:number;
@@ -35,4 +37,11 @@ export interface IMember {
   email:string;
   address:string;
   extra__thumbImg:string;
+}
+
+export interface IReview extends IEntity{
+  relId:number;
+  relTypeCode:string;
+  body:string;
+  memberId:number;
 }

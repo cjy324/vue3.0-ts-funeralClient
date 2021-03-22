@@ -2,7 +2,7 @@
 
   <TitleBar>요청사항 작성 페이지</TitleBar>
 
-  <section class="section section-article-write-form-box px-2">
+  <section class="section section-order-write-form-box px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <form v-if="globalShare.isLogined" v-on:submit.prevent="checkAndAddOrder">
