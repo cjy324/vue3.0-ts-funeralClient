@@ -6,10 +6,21 @@
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <form v-if="globalShare.isLogined" v-on:submit.prevent="checkAndAddReview">
-          <FormRow title="리뷰내용">
-            <textarea ref="newReviewBodyElRef" class="form-row-input" placeholder="내용을 입력해주세요."></textarea>
+          <div title="평점" class="text-center h-24">
+            <div class="btn-success">평점</div>
+            <select ref="newRatingPointElRef" class="text-xl h-10 mt-2 w-1/2 border">
+              <option value="1">1점</option>
+              <option value="2">2점</option>
+              <option value="3">3점</option>
+              <option value="4">4점</option>
+              <option value="5">5점</option>
+            </select>
+          </div>
+          <div class="btn-success">후기 작성</div>
+          <FormRow>
+            <textarea ref="newReviewBodyElRef" class="form-row-input border" placeholder="내용을 입력해주세요."></textarea>
           </FormRow>
-          <FormRow title="작성">
+          <FormRow >
             <div class="btns">
               <input type="submit" value="작성" class="btn-primary" />
             </div>
@@ -29,6 +40,7 @@
 import { defineComponent, reactive, ref, getCurrentInstance, onMounted } from 'vue'
 import { MainApi } from '../apis'
 import { Router } from 'vue-router'
+import * as Util from '../utils'
 
 
 export default defineComponent({
@@ -54,6 +66,7 @@ export default defineComponent({
     const mainApi:MainApi = getCurrentInstance()?.appContext.config.globalProperties.$mainApi;
 
     const newReviewBodyElRef = ref<HTMLInputElement>();
+    const newRatingPointElRef = ref<HTMLInputElement>();
 
 
     /* 공백 체크 */
@@ -75,10 +88,28 @@ export default defineComponent({
       }
 
     
+    const raingAdd = (onSuccess:Function) => {
 
+        mainApi.rating_doAdd(props.relTypeCode, props.relId, Util.toIntOrNull(newRatingPointElRef.value?.value), props.globalShare.loginedMember.id)
+        .then(axiosResponse => {
+          
+          if ( axiosResponse.data.fail ) {
+            alert(axiosResponse.data.msg);
+            return;
+          }
+          else{
+            onSuccess();
+          }
+        });
+      };
+
+
+      const startAddReview = () =>{
       // 작성 함수로 보내기
-      addReview(props.relTypeCode, props.relId, newReviewBodyEl.value, props.globalShare.loginedMember.id);
+          addReview(props.relTypeCode, props.relId, newReviewBodyEl.value, props.globalShare.loginedMember.id);
+      }
 
+      raingAdd(startAddReview);
     }
 
     //typescript에서는 title:string, body:string 이런식으로 type을 적어주어야 한다
@@ -103,8 +134,9 @@ export default defineComponent({
 
     return{
         newReviewBodyElRef,
+        newRatingPointElRef,
         checkAndAddReview,
-      
+        
     }
 
   }

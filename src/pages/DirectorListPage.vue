@@ -8,8 +8,8 @@
         <option value="name">이름</option>
         <option value="address">지역</option>
       </select>
-      <input id="searchKeywordElRef" ref="searchKeywordElRef" class="h-full w-full pl-4" type="text" placeholder="검색어 입력" :value="searchKeyword" @keyup.enter="onInput($event)" >
-      <button class="w-20 text-white rounded-r-md bg-blue-500" type="button">검색</button>
+      <input ref="searchKeywordElRef" class="h-full w-full pl-4" type="text" placeholder="검색어 입력" :value="searchKeyword" @keyup.enter="onInput($event)" >
+      <button class="w-20 text-white rounded-r-md bg-blue-500" type="button" @click="onClickInput">검색</button>
     </div>
     <!--리스트 search 끝-->
     <!--리스트 grid 시작-->
@@ -20,7 +20,8 @@
       <div class="memberList-section-grid__body p-8 bg-white m-2 border rounded-xl">
         <!--프로필 이미지-->
         <div class="flex justify-center overflow-hidden">
-          <img class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + member.extra__thumbImg">
+          <img v-if="member.extra__thumbImg != null" class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + member.extra__thumbImg">
+          <img v-if="member.extra__thumbImg == null" class="h-96 rounded-lg object-cover object-center" :src="'http://via.placeholder.com/300?text=NoImage'">
         </div>
         <!--이름-->
         <div class="text-center m-4">
@@ -65,8 +66,9 @@
           </div>
           <div class="border rounded-full h-24 w-24 bg-yellow-500 flex justify-center items-center">
             <div class="font-bold text-2xl text-white">
-              4.5/5
+              {{ member.extra__ratingPoint.toFixed(1) }}/5
             </div>
+            <star-rating :increment="0.5"></star-rating>
           </div>
         </div>
         <!--후기-->
@@ -81,10 +83,10 @@
         <!--template를 활용하면 v-for문 내 v-for문 즉, 이중v-for문 사용이 가능해진다.-->
         <!--또한, vue3.0부터는 동일 태그내에 v-for랑 v-if를 사용할 수 없는 것 같다.(권장하는 방법이 아닌듯..) -->
         <!--하지만 template를 활용해 v-for를 분리해주면 v-for와 v-if를 동시에 사용가능해진다. -->
-        <template v-bind:key="review.id" v-for="review in state.reviews" >
-        <div class="mt-2 border-b-2 border-t-2" v-if="review.relId === member.id">
+        <template v-bind:key="review.id" v-for="(review, index) in state.reviews" >
+        <div class="mt-2 border-b-2 border-t-2" v-show="review.relId === member.id">
             <p class="text-gray-900 p-2">
-              {{review.body}}
+              {{review.body}} {{index}}
             </p>
             <p class="text-gray-500 p-2 text-sm">
               {{review.updateDate}}
@@ -139,6 +141,15 @@ export default defineComponent({
       return state.searchKeyword;
     }
 
+    function onClickInput() {
+      if(searchKeywordElRef.value == undefined){
+        return;
+      }
+
+      state.searchKeyword = searchKeywordElRef.value.value;
+      return state.searchKeyword;
+    }
+
     function onChangeSearchKeywordType(event:any){
       searchKeywordType = event.target.value;
       return searchKeywordType;
@@ -169,6 +180,24 @@ export default defineComponent({
 
     }
 
+
+    const filteredReviews = computed(() => {
+      
+      const limitCount = 5;
+
+      let filteredReviews = [];
+
+      for(let i = 0; i < limitCount; i++){
+        if(state.reviews.length < limitCount){
+          filteredReviews = state.reviews
+          return filteredReviews;
+        }
+        filteredReviews[i] = state.reviews[i]
+      }
+
+      return filteredReviews
+    })
+
     const relTypeCode = 'director';
 
     function loadReviews(relTypeCode:string){
@@ -186,10 +215,14 @@ export default defineComponent({
       loadReviews(relTypeCode);
     });
 
+
     return{
       state,
       filteredMembers,
+      filteredReviews,
+      searchKeywordElRef,
       onInput,
+      onClickInput,
       onChangeSearchKeywordType,
 
     }

@@ -37,6 +37,7 @@ export interface IMember extends IEntity {
   email:string;
   address:string;
   extra__thumbImg:string;
+  extra__ratingPoint:number;
 }
 
 export interface IReview extends IEntity{

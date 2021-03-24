@@ -186,7 +186,12 @@ export interface MainApi__review_list__IResponseBody extends Base__IResponseBody
   };
 }
 
-
+// /usr/rating/doAdd 의 응답 타입
+export interface MainApi__rating_doAdd__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number
+  };
+}
 
 
 
@@ -381,7 +386,19 @@ export class MainApi extends HttpClient {
   }
    
 
-  
+  // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public rating_doAdd(relTypeCode:string, relId:number, point:number, memberId:number) {
+    return this.postByForm<MainApi__rating_doAdd__IResponseBody>(
+      `/usr/rating/doAdd`, {
+        relTypeCode,
+        relId,
+        point,
+        memberId,
+        
+      }
+    );
+  }
 
 } 
 
