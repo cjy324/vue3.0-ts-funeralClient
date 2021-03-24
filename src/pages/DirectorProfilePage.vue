@@ -6,7 +6,8 @@
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <div>
           <div title="프로필 이미지">
-            <img class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + state.member.extra__thumbImg">
+            <img v-if="state.member.extra__thumbImg != null" class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + state.member.extra__thumbImg">
+            <img v-if="state.member.extra__thumbImg == null" class="h-96 rounded-lg object-cover object-center" :src="'http://via.placeholder.com/300?text=NoImage'">
           </div>
           <div title="회원유형">
             <p>회원유형</p>
