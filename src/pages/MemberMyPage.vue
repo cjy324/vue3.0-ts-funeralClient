@@ -4,7 +4,7 @@
   <section class="section section-member-join-form px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
-        <div v-if="globalShare.isLogined" v-on:submit.prevent="checkAndJoin">
+        <div v-if="globalShare.isLogined">
           <div title="프로필 이미지">
             <img class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + state.member.extra__thumbImg">
           </div>

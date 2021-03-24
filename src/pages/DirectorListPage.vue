@@ -25,10 +25,10 @@
         </div>
         <!--이름-->
         <div class="text-center m-4">
-          <router-link to="/member/profile" class="text-indigo-500 font-bold text-xl md:text-2xl hover:text-gray-700">
+          <router-link :to="'/director/profile?id=' + member.id" class="text-indigo-500 font-bold text-xl md:text-2xl hover:text-gray-700">
             {{ member.name }}
           </router-link>
-          <router-link :to="'/member/profile?id=' + member.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
+          <router-link :to="'/director/profile?id=' + member.id" class="block btn-success mt-2 h-10 w-full rounded-md">
           상세보기
         </router-link>
         </div>
@@ -43,9 +43,9 @@
             - {{ member.address }} 
           </p>
         </div>
-        <!--활동이력-->
+        <!--경력-->
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
-          활동이력
+          경력
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
             - {{ member.cellphoneNo }}
           </p>

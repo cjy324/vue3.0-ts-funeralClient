@@ -36,6 +36,10 @@
             {{ order.title }}
           </router-link>
         </div>
+        <!--담당지도사-->
+        <h1 class="font-semibold text-gray-900 leading-none text-xl mt-1 mb-3 capitalize break-normal">
+          담당자회원번호: {{order.directorId}}
+        </h1>
         <!--의뢰인명-->
         <h1 class="font-semibold text-gray-900 leading-none text-xl mt-1 mb-3 capitalize break-normal">
           의뢰인: {{order.extra__member}}

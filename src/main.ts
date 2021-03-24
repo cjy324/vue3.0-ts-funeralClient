@@ -91,7 +91,8 @@ const routes = [
   },
   { 
     path: '/director/profile', 
-    component: DirectorProfilePage
+    component: DirectorProfilePage,
+    props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
   },
   {
     path: '/member/join',
