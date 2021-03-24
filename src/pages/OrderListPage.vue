@@ -5,6 +5,7 @@
     <!--리스트 search 시작-->
     <div class="flex h-10 orderList-section-search m-2 text-right rounded-md">
       <select ref="selectStepLevelElRef" class="h-full w-1/4 rounded-l-md" id="" @change="onChangeStepLevel">
+        <option value="0">진행단계 전체</option>
         <option value="1">요청서 검토중</option>
         <option value="2">장례준비중</option>
         <option value="3">장례진행중</option>
@@ -129,7 +130,7 @@ export default defineComponent({
       orders: [] as IOrder[],
       searchKeyword: '' as string,
       result:'' as string,
-      selectStepLevel: 1,
+      selectStepLevel: 0,
     });
 
     let searchKeywordType = "title";
@@ -192,8 +193,19 @@ export default defineComponent({
       let filteredOrders = state.orders;
       
       //filteredOrders = state.orders.filter((order:IOrder) => order.stepLevel === state.selectStepLevel)
-
-      if(searchKeywordType == "title"){
+      if(state.selectStepLevel == 0){
+        if(searchKeywordType == "title"){
+        filteredOrders = state.orders.filter((order:IOrder) => order.title.includes(state.searchKeyword))
+      }
+      if(searchKeywordType == "body"){
+        filteredOrders = state.orders.filter((order:IOrder) => order.body.includes(state.searchKeyword))
+      }
+      if(searchKeywordType == "funeralHome"){
+        filteredOrders = state.orders.filter((order:IOrder) => order.funeralHome.includes(state.searchKeyword))
+      }
+      }
+      else{
+        if(searchKeywordType == "title"){
         filteredOrders = state.orders.filter((order:IOrder) => order.title.includes(state.searchKeyword) && order.stepLevel === state.selectStepLevel)
       }
       if(searchKeywordType == "body"){
@@ -202,8 +214,7 @@ export default defineComponent({
       if(searchKeywordType == "funeralHome"){
         filteredOrders = state.orders.filter((order:IOrder) => order.funeralHome.includes(state.searchKeyword) && order.stepLevel === state.selectStepLevel)
       }
-
-      
+      }
 
       return filteredOrders
     })
