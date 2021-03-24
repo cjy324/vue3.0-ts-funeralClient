@@ -91,6 +91,12 @@
             <p class="text-gray-500 p-2 text-sm">
               {{review.updateDate}} / {{review.extra__writer}}
             </p>
+            <div class="btns" v-if="globalShare.loginedMember.id === review.memberId">
+                <router-link :to="'/review/doAdd?relTypeCode=director&relId=' + member.id" class="btn-secondary">
+                  수정
+                </router-link>
+                <button class="btn-warning" @click="doDeleteReview(review.id)">삭제</button>
+            </div>
         </div>
         </template>
       </div>
@@ -177,10 +183,23 @@ export default defineComponent({
       .then(axiosResponse => {
           state.members = axiosResponse.data.body.members;
       });
-
     }
 
+    function doDeleteReview(id:number) {
+      if(confirm('정말 삭제하시겠습니까?') == false){
+        return;
+      }
+      mainApi.review_doDelete(id)
+      .then(axiosResponse => {
+          alert(axiosResponse.data.msg);
+          if ( axiosResponse.data.fail ) {
+            return;
+          }
+        window.location.reload();
+      });
+    }
 
+  /*리뷰 필터링 테스트용
     const filteredReviews = computed(() => {
       
       const limitCount = 5;
@@ -197,6 +216,8 @@ export default defineComponent({
 
       return filteredReviews
     })
+  */
+
 
     const relTypeCode = 'director';
 
@@ -207,6 +228,7 @@ export default defineComponent({
       });
 
     }
+    
 
     // onMounted 바로 실행하는 것이 아닌 모든 것이 준비되었을때 실행됨
     onMounted(() => {
@@ -219,7 +241,8 @@ export default defineComponent({
     return{
       state,
       filteredMembers,
-      filteredReviews,
+      //filteredReviews,
+      doDeleteReview,
       searchKeywordElRef,
       onInput,
       onClickInput,

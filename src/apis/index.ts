@@ -179,6 +179,13 @@ export interface MainApi__review_doAdd__IResponseBody extends Base__IResponseBod
   };
 }
 
+// /usr/review/doDelete 의 응답 타입
+export interface MainApi__review_doDelete__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number
+  };
+}
+
 // /usr/member/list 의 응답 타입
 export interface MainApi__review_list__IResponseBody extends Base__IResponseBodyType1 {
   body:{
@@ -378,6 +385,11 @@ export class MainApi extends HttpClient {
         
       }
     );
+  }
+
+  // http://localhost:8090/usr/member/list?boardId=? 를 요청하고 응답을 받아오는 함수
+  public review_doDelete(id:number) {
+    return this.get<MainApi__review_doDelete__IResponseBody>(`/usr/review/doDelete?id=${id}`);
   }
 
   // http://localhost:8090/usr/member/list?boardId=? 를 요청하고 응답을 받아오는 함수
