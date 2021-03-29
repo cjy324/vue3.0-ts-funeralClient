@@ -21,7 +21,7 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/director/list" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+            <router-link to="/expert/list" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               DIRECTOR's
             </router-link>
           </li>
@@ -31,17 +31,17 @@
             </router-link>
           </li>
           <li v-if="globalShare.isLogined">
-            <router-link :to="'/member/detail?id='+ globalShare.loginedMember.id" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
+            <router-link :to="'/client/detail?id='+ globalShare.loginedMember.id" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
               MyPage
             </router-link>
           </li>
           <li v-if="globalShare.isLogined == false">
-            <router-link to="/member/join" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
+            <router-link to="/client/join" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
               Sign-up
             </router-link>
           </li>
           <li v-if="globalShare.isLogined == false">
-            <router-link to="/member/login" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+            <router-link to="/client/login" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               Log-in
             </router-link>
           </li>

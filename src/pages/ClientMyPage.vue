@@ -1,46 +1,42 @@
 <template>
   <TitleBar>My Page</TitleBar>
 
-  <section class="section section-member-join-form px-2">
+  <section class="section section-client-join-form px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <div v-if="globalShare.isLogined">
           <div title="프로필 이미지">
-            <img v-if="state.member.extra__thumbImg != null" class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + state.member.extra__thumbImg">
-            <img v-if="state.member.extra__thumbImg == null" class="h-96 rounded-lg object-cover object-center" :src="'http://via.placeholder.com/300?text=NoImage'">
+            <img v-if="state.client.extra__thumbImg != null" class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + state.client.extra__thumbImg">
+            <img v-if="state.client.extra__thumbImg == null" class="h-96 rounded-lg object-cover object-center" :src="'http://via.placeholder.com/300?text=NoImage'">
           </div>
           <div title="회원유형">
             <p>회원유형</p>
-            {{state.member.authLevel}}
+            일반회원
           </div>
           <div title="아이디">
             <p>아이디</p>
-            {{state.member.loginId}}
+            {{state.client.loginId}}
           </div>
           <div title="이름">
             <p>이름</p>
-            {{state.member.name}}
-          </div>
-          <div title="닉네임">
-            <p>닉네임</p>
-            {{state.member.nickname}}
+            {{state.client.name}}
           </div>
           <div title="전화번호">
             <p>전화번호</p>
-            {{state.member.cellphoneNo}}
+            {{state.client.cellphoneNo}}
           </div>
           <div title="이메일">
             <p>이메일</p>
-            {{state.member.email}}
+            {{state.client.email}}
           </div>
           <div title="주소">
             <p>주소</p>
-            {{state.member.address}}
+            {{state.client.region}}
           </div>
           <div>
             <div class="btns">
-              <router-link class="btn-secondary" :to="'/member/doModify?id=' + state.member.id">회원정보수정</router-link>
-              <router-link class="btn-danger" to="member/doDelete">탈퇴</router-link>
+              <router-link class="btn-secondary" :to="'/client/doModify?id=' + state.client.id">회원정보수정</router-link>
+              <router-link class="btn-danger" to="client/doDelete">탈퇴</router-link>
             </div>
           </div>
         </div>
@@ -55,10 +51,10 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, watch, getCurrentInstance, onMounted } from 'vue'
 import { MainApi } from '../apis'
-import { IMember } from '../types'
+import { IClient } from '../types'
 
 export default defineComponent({
-  name: 'MemberMyPage',
+  name: 'ClientMyPage',
   props: {
     globalShare: {
       type: Object,
@@ -73,20 +69,20 @@ export default defineComponent({
     const mainApi:MainApi = getCurrentInstance()?.appContext.config.globalProperties.$mainApi;
 
     const state = reactive({
-      member: {} as IMember
+      client: {} as IClient
     });
 
-    function loadMember(id:number) {
-      mainApi.member_detail(id)
+    function loadClient(id:number) {
+      mainApi.client_detail(id)
       .then(axiosResponse => {
-        state.member = axiosResponse.data.body.member;
+        state.client = axiosResponse.data.body.client;
       });
     }
     onMounted(() => {
-      loadMember(props.id);
+      loadClient(props.id);
     });
     watch(() => props.id, (newValue, oldValue) => {
-      loadMember(props.id);
+      loadClient(props.id);
     })
 
     return {

@@ -1,7 +1,7 @@
 <template>
   <TitleBar>로그인</TitleBar>
 
-  <section class="section section-member-login-form px-2">
+  <section class="section section-client-login-form px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <form v-if="globalShare.isLogined == false" v-on:submit.prevent="checkAndLogin">
@@ -32,7 +32,7 @@ import { useRoute } from 'vue-router'
 import { Router } from 'vue-router'
 
 export default defineComponent({
-  name: 'MemberLoginPage',
+  name: 'ClientLoginPage',
   props: {
     globalShare: {
       type: Object,
@@ -95,7 +95,7 @@ export default defineComponent({
     
     }
     function login(loginId:string, loginPw:string) {
-      mainApi.member_authKey(loginId, loginPw)
+      mainApi.client_authKey(loginId, loginPw)
         .then(axiosResponse => {
           alert(axiosResponse.data.msg);
           
@@ -106,20 +106,18 @@ export default defineComponent({
 
           const authKey = axiosResponse.data.body.authKey;
 
-          const loginedMember = axiosResponse.data.body.member;  //member클래스 가져오기
+          const loginedClient = axiosResponse.data.body.client;  //client클래스 가져오기
 
           localStorage.setItem("authKey", authKey);
-          localStorage.setItem("loginedMemberId", loginedMember.id + "");
-          localStorage.setItem("loginedMemberName", loginedMember.name);
-          localStorage.setItem("loginedMemberNickname", loginedMember.nickname);
-          localStorage.setItem("loginedMemberProfileImgUrl", loginedMember.extra__thumbImg);
+          localStorage.setItem("loginedClientId", loginedClient.id + "");
+          localStorage.setItem("loginedClientName", loginedClient.name);
+          localStorage.setItem("loginedClientProfileImgUrl", loginedClient.extra__thumbImg);
 
-          props.globalShare.loginedMember = {
+          props.globalShare.loginedClient = {
             authKey,
-            id:loginedMember.id,
-            name:loginedMember.name,
-            nickname:loginedMember.nickname,
-            profileImgUrl:loginedMember.extra__thumbImg
+            id:loginedClient.id,
+            name:loginedClient.name,
+            profileImgUrl:loginedClient.extra__thumbImg
 
           };
 

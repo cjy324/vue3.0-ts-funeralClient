@@ -1,22 +1,18 @@
 <template>
-  <TitleBar>회원가입</TitleBar>
+  <TitleBar>회원정보수정</TitleBar>
 
-  <section class="section section-member-join-form px-2">
+  <section class="section section-client-modify-form px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
-        <form v-if="globalShare.isLogined == false" v-on:submit.prevent="checkAndJoin">
+        <form v-if="globalShare.isLogined" v-on:submit.prevent="checkAndModify">
+          <div title="프로필 이미지">
+            <img class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + state.client.extra__thumbImg">
+          </div>
           <FormRow title="프로필 이미지">
-            <input ref="profileImgElRef" class="form-row-input" type="file" placeholder="프로필 이미지를 선택해 주세요.">
-          </FormRow>
-          <FormRow title="회원유형">
-            <select ref="authLevelElRef" name="" id="">
-              <option value="3">일반회원</option>
-              <option value="4">도우미</option>
-              <option value="5">지도사</option>
-            </select>
+            <input ref="profileImgElRef" class="form-row-input" type="file">
           </FormRow>
           <FormRow title="아이디">
-            <input ref="loginIdElRef" class="form-row-input" type="text" placeholder="아이디를 입력해주세요.">
+            <input ref="loginIdElRef" class="form-row-input" type="text" :value="state.client.loginId">
           </FormRow>
           <FormRow title="비밀번호">
             <input ref="loginPwElRef" class="form-row-input" type="password" placeholder="비밀번호를 입력해주세요.">
@@ -25,23 +21,20 @@
             <input ref="loginPwConfirmElRef" class="form-row-input" type="password" placeholder="비밀번호 확인을 해주세요.">
           </FormRow>
           <FormRow title="이름">
-            <input ref="nameElRef" class="form-row-input" type="text" placeholder="이름을 입력해주세요.">
-          </FormRow>
-          <FormRow title="닉네임">
-            <input ref="nicknameElRef" class="form-row-input" type="text" placeholder="닉네임을 입력해주세요.">
+            <input ref="nameElRef" class="form-row-input" type="text" :value="state.client.name">
           </FormRow>
           <FormRow title="전화번호">
-            <input ref="cellphoneNoElRef" class="form-row-input" type="tel" maxlength="11" placeholder="전화번호를 입력해주세요.">
+            <input ref="cellphoneNoElRef" class="form-row-input" type="tel" maxlength="11" :value="state.client.cellphoneNo">
           </FormRow>
           <FormRow title="이메일">
-            <input ref="emailElRef" class="form-row-input" type="email" placeholder="이메일을 입력해주세요.">
+            <input ref="emailElRef" class="form-row-input" type="email" :value="state.client.email">
           </FormRow>
           <FormRow title="시/도">
-            <input ref="addressElRef" class="form-row-input" type="text" placeholder="시/도 주소를 입력해주세요.">
+            <input ref="regionElRef" class="form-row-input" type="text" :value="state.client.region">
           </FormRow>
-          <FormRow title="가입">
+          <FormRow title="완료">
             <div class="btns">
-              <input type="submit" value="가입" class="btn-primary" />
+              <input type="submit" value="완료" class="btn-primary" />
             </div>
           </FormRow>
         </form>
@@ -54,34 +47,55 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, getCurrentInstance, onMounted } from 'vue'
+import { defineComponent, ref, reactive, getCurrentInstance, onMounted, watch } from 'vue'
 import { MainApi } from '../apis'
-import { Router } from 'vue-router';
+import { Router } from 'vue-router'
+import { IClient } from '../types'
 
 export default defineComponent({
-  name: 'MemberJoinPage',
+  name: 'ClientJoinPage',
   props: {
     globalShare: {
       type: Object,
       required: true
     },
+    id: {
+      type: Number,
+      required: true
+    }
   },
   setup(props) {
     const router:Router = getCurrentInstance()?.appContext.config.globalProperties.$router;
     const mainApi:MainApi = getCurrentInstance()?.appContext.config.globalProperties.$mainApi;
     const profileImgElRef = ref<HTMLInputElement>();
-    const authLevelElRef = ref<HTMLInputElement>();
     const loginIdElRef = ref<HTMLInputElement>();
     const loginPwElRef = ref<HTMLInputElement>();
     const loginPwConfirmElRef = ref<HTMLInputElement>();
     const nameElRef = ref<HTMLInputElement>();
-    const nicknameElRef = ref<HTMLInputElement>();
     const cellphoneNoElRef = ref<HTMLInputElement>();
     const emailElRef = ref<HTMLInputElement>();
-    const addressElRef = ref<HTMLInputElement>();
+    const regionElRef = ref<HTMLInputElement>();
+
+
+    const state = reactive({
+      client: {} as IClient
+    });
+
+    function loadClient(id:number) {
+      mainApi.client_detail(id)
+      .then(axiosResponse => {
+        state.client = axiosResponse.data.body.client;
+      });
+    }
+    onMounted(() => {
+      loadClient(props.id);
+    });
+    watch(() => props.id, (newValue, oldValue) => {
+      loadClient(props.id);
+    })
 
    
-    function checkAndJoin() {
+    function checkAndModify() {
        // 아이디 체크
       if ( loginIdElRef.value == null ) {
         return;
@@ -135,20 +149,6 @@ export default defineComponent({
         nameEl.focus();
         return;
       }
-
-      // 닉네임 체크
-      if ( nicknameElRef.value == null ) {
-        return;
-      }
-
-      const nicknameEl = nicknameElRef.value;
-      nicknameEl.value = nicknameEl.value.trim();
-      
-      if ( nicknameEl.value.length == 0 ) {
-        alert('닉네임을 입력해주세요.');
-        nicknameEl.focus();
-        return;
-      }
       
       // 전화번호 체크
       if ( cellphoneNoElRef.value == null ) {
@@ -179,27 +179,20 @@ export default defineComponent({
       }
 
       // 시/도 주소 체크
-      if ( addressElRef.value == null ) {
+      if ( regionElRef.value == null ) {
         return;
       }
       
-      const addressEl = addressElRef.value;
-      addressEl.value = addressEl.value.trim();
+      const regionEl = regionElRef.value;
+      regionEl.value = regionEl.value.trim();
       
-      if ( addressEl.value.length == 0 ) {
+      if ( regionEl.value.length == 0 ) {
         alert('시/도를 입력해주세요.');
-        addressEl.focus();
+        regionEl.focus();
         return;
       }
 
-     
-
-      if(authLevelElRef.value == null){
-        return
-      }
-      
-      const authLevelEl = authLevelElRef.value;
-      
+    
       const startFileUpload = (onSuccess:Function) => {
         // ! => 반전
         // a = undefinded(or null) / !a = true / !!a = flase란 의미
@@ -228,20 +221,20 @@ export default defineComponent({
       //회원가입 join함수 시작
       //파일첨부기능 추가로 인해 로직 변경
       //join(loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value);
-      const startJoin = (genFileIdsStr:string) =>{
-        join(parseInt(authLevelEl.value), loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value, addressEl.value,  genFileIdsStr);
+      const startModify = (genFileIdsStr:string) =>{
+        modify(props.id, loginIdEl.value, loginPwEl.value, nameEl.value, cellphoneNoEl.value, emailEl.value, regionEl.value, genFileIdsStr);
       };
 
       //startFileUpload 로직을 먼저 실행한 후
       //onSuccess 즉, startJoin를 실행한다. onSuccess = startJoin
       //실행 순서 : 1.첨부파일이 있는지 확인하고 업로드까지 진행하는 startFileUpload함수 종료 후 2.회원가입 join함수가 실행된다.
-      startFileUpload(startJoin);
+      startFileUpload(startModify);
 
 
       
     }
-    function join(authLevel:number, loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
-      mainApi.member_doJoin(authLevel, loginId, loginPw, name, nickname, cellphoneNo, email, address, genFileIdsStr)
+    function modify(id:number, loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, genFileIdsStr:string) {
+      mainApi.client_doModify(id, loginId, loginPw, name, cellphoneNo, email, region, genFileIdsStr)
         .then(axiosResponse => {
           
           alert(axiosResponse.data.msg);
@@ -249,21 +242,20 @@ export default defineComponent({
             return;
           }
           
-          router.replace('/member/login?loginId=' + loginId)
+          router.replace('/client/detail?id=' + id)
         });
     }
     return {
-      checkAndJoin,
+      state,
+      checkAndModify,
       profileImgElRef,
-      authLevelElRef,
       loginIdElRef,
       loginPwElRef,
       loginPwConfirmElRef,
       nameElRef,
-      nicknameElRef,
       cellphoneNoElRef,
       emailElRef,
-      addressElRef
+      regionElRef
     }
   }
 })

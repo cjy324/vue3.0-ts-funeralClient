@@ -15,12 +15,12 @@ import FormRow from './components/FormRow.vue';
 
 // 각 페이지 불러오기
 import HomeMainPage from './pages/HomeMainPage.vue'
-import DirectorListPage from './pages/DirectorListPage.vue'
-import DirectorProfilePage from './pages/DirectorProfilePage.vue'
-import MemberJoinPage from './pages/MemberJoinPage.vue'
-import MemberLoginPage from './pages/MemberLoginPage.vue'
-import MemberMyPage from './pages/MemberMyPage.vue'
-import MemberModifyPage from './pages/MemberModifyPage.vue'
+import ExpertListPage from './pages/ExpertListPage.vue'
+import ExpertProfilePage from './pages/ExpertProfilePage.vue'
+import ClientJoinPage from './pages/ClientJoinPage.vue'
+import ClientLoginPage from './pages/ClientLoginPage.vue'
+import ClientMyPage from './pages/ClientMyPage.vue'
+import ClientModifyPage from './pages/ClientModifyPage.vue'
 import OrderAddPage from './pages/OrderAddPage.vue'
 import OrderDetailPage from './pages/OrderDetailPage.vue'
 import OrderListPage from './pages/OrderListPage.vue'
@@ -31,13 +31,12 @@ import ReviewAddPage from './pages/ReviewAddPage.vue'
 // 전역state 만들기
 /// localStorage에서 로그인 정보 가져오기
 const authKey = localStorage.getItem("authKey")
-const loginedMemberId  = Util.toIntOrNull(localStorage.getItem("loginedMemberId"))
+const loginedClientId  = Util.toIntOrNull(localStorage.getItem("loginedClientId"))
 // localStorage에 저장될 때 문장화가 됨 
 // null이 "null"과 같이 문장이되어 저장되어버림
 // 이 버그를 방지하기위해 Util.toStringOrNull()함수 적용
-const loginedMemberName = Util.toStringOrNull(localStorage.getItem("loginedMemberName"))
-const loginedMemberNickname  = Util.toStringOrNull(localStorage.getItem("loginedMemberNickname"))
-const loginedMemberProfileImgUrl  = Util.toStringOrNull(localStorage.getItem("loginedMemberProfileImgUrl"))
+const loginedClientName = Util.toStringOrNull(localStorage.getItem("loginedClientName"))
+const loginedClientProfileImgUrl  = Util.toStringOrNull(localStorage.getItem("loginedClientProfileImgUrl"))
 
 
 /*state => 상태
@@ -45,27 +44,25 @@ const loginedMemberProfileImgUrl  = Util.toStringOrNull(localStorage.getItem("lo
 하지만 로그인 정보의 경우 전역적으로 필요함 
 이를 위해 전역state(=> globalShare)를 구축해야함*/
 const globalShare:any = reactive({
-  //loginedMember:{},  //loginedMember:{}는 비어있는 상태
+  //loginedClient:{},  //loginedClient:{}는 비어있는 상태
   //로그인 정보 채우기
-  loginedMember:{
+  loginedClient:{
     authKey,
-    id:loginedMemberId,
-    name:loginedMemberName,
-    nickname:loginedMemberNickname,
-    profileImgUrl:loginedMemberProfileImgUrl
+    id:loginedClientId,
+    name:loginedClientName,
+    profileImgUrl:loginedClientProfileImgUrl
   },
-  //globalShare.loginedMember가 비어있지 않는지를 computed로 자동 체크
+  //globalShare.loginedClient가 비어있지 않는지를 computed로 자동 체크
   //비어있지 않다면(===false) isLogined
-  //isLogined: computed(() => Util.isEmptyObject(globalShare.loginedMember) === false)  
-  isLogined: computed(() => globalShare.loginedMember.id !== null ),
+  //isLogined: computed(() => Util.isEmptyObject(globalShare.loginedClient) === false)  
+  isLogined: computed(() => globalShare.loginedClient.id !== null ),
   
   //로그아웃
   logout: () => { 
       localStorage.removeItem("authKey");
-      localStorage.removeItem("loginedMemberId");
-      localStorage.removeItem("loginedMemberName");
-      localStorage.removeItem("loginedMemberNickname");
-      localStorage.removeItem("loginedMemberProfileImgUrl");
+      localStorage.removeItem("loginedClientId");
+      localStorage.removeItem("loginedClientName");
+      localStorage.removeItem("loginedClientProfileImgUrl");
 
       location.replace('/');
       alert('로그아웃 되었습니다.')
@@ -85,33 +82,33 @@ const routes = [
     component: HomeMainPage
   },
   { 
-    path: '/director/list', 
-    component: DirectorListPage, 
+    path: '/expert/list', 
+    component: ExpertListPage, 
     props: (route:any) => ({ globalShare })
   },
   { 
-    path: '/director/profile', 
-    component: DirectorProfilePage,
+    path: '/expert/profile', 
+    component: ExpertProfilePage,
     props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
   },
   {
-    path: '/member/join',
-    component: MemberJoinPage,
+    path: '/client/join',
+    component: ClientJoinPage,
     props: (route:any) => ({globalShare})
   },
   {
-    path: '/member/login',
-    component: MemberLoginPage,
+    path: '/client/login',
+    component: ClientLoginPage,
     props: (route:any) => ({globalShare})
   },
   {
-    path: '/member/detail',
-    component: MemberMyPage,
+    path: '/client/detail',
+    component: ClientMyPage,
     props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
   },
   {
-    path: '/member/doModify',
-    component: MemberModifyPage,
+    path: '/client/doModify',
+    component: ClientModifyPage,
     props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
   },
   {
@@ -127,7 +124,7 @@ const routes = [
   {
     path: '/order/list',
     component: OrderListPage,
-    props: (route:any) => ({memberId: Util.toIntOrUnd(route.query.memberId), globalShare})
+    props: (route:any) => ({clientId: Util.toIntOrUnd(route.query.clientId), globalShare})
   },
   {
     path: '/order/doModify',

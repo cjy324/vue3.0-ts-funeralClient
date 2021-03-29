@@ -4,7 +4,7 @@
 //axios: ajax통신을 받아오는 것
 //@types/axios: typescript에서 axios를 다루는데 도움이 되는 정보들
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import {IOrder, IMember, IReview} from '../types'
+import {IOrder, IClient, IExpert, IAssistant, IReview} from '../types'
 
 // API 원형
 abstract class HttpClient {
@@ -111,7 +111,14 @@ export interface MainApi__order_detail__IResponseBody extends Base__IResponseBod
 }
 
 // /usr/member/doJoin 의 응답 타입
-export interface MainApi__member_doJoin__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__client_doJoin__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number
+  };
+}
+
+// /usr/member/doJoin 의 응답 타입
+export interface MainApi__asst_doJoin__IResponseBody extends Base__IResponseBodyType1 {
   body:{
     id: number
   };
@@ -125,37 +132,96 @@ export interface MainApi__common_genFile_doUpload__IResponseBody extends Base__I
 }
 
 // /usr/member/authKey 의 응답 타입
-export interface MainApi__member_authKey__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__client_authKey__IResponseBody extends Base__IResponseBodyType1 {
   body:{
     authKey : string,
-    member : IMember,
+    client : IClient,
+  };
+}
+
+// /usr/member/authKey 의 응답 타입
+export interface MainApi__expert_authKey__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    authKey : string,
+    expert : IExpert,
+  };
+}
+
+
+// /usr/member/authKey 의 응답 타입
+export interface MainApi__asst_authKey__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    authKey : string,
+    asst : IAssistant,
   };
 }
 
 // /usr/member/list 의 응답 타입
-export interface MainApi__director_list__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__expert_list__IResponseBody extends Base__IResponseBodyType1 {
   body:{
     //응답을 받기위해선 key명이 백엔드와 동일해야 함
     //또한 백엔드로부터 ResultData와 같이 json형태로 받아야 함
     //ex) return new ResultData("S-1", "성공", "members", members);
-    members: IMember[]
+    experts: IExpert[]
+  };
+}
+
+// /usr/member/list 의 응답 타입
+export interface MainApi__asst_list__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    //응답을 받기위해선 key명이 백엔드와 동일해야 함
+    //또한 백엔드로부터 ResultData와 같이 json형태로 받아야 함
+    //ex) return new ResultData("S-1", "성공", "members", members);
+    assts: IAssistant[]
   };
 }
 
 // /usr/member/detail 의 응답 타입
-export interface MainApi__member_detail__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__client_detail__IResponseBody extends Base__IResponseBodyType1 {
   body:{
-    member: IMember
+    client: IClient
+  };
+}
+
+// /usr/member/detail 의 응답 타입
+export interface MainApi__expert_detail__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    expert: IExpert
+  };
+}
+
+// /usr/member/detail 의 응답 타입
+export interface MainApi__asst_detail__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    asst: IAssistant
   };
 }
 
 // /usr/member/doModify 의 응답 타입
-export interface MainApi__member_doModify__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__client_doModify__IResponseBody extends Base__IResponseBodyType1 {
   body:{
-    member: IMember,
+    client: IClient,
     id: number
   };
 }
+
+// /usr/member/doModify 의 응답 타입
+export interface MainApi__expert_doModify__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    expert: IExpert,
+    id: number
+  };
+}
+
+// /usr/member/doModify 의 응답 타입
+export interface MainApi__asst_doModify__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    asst: IAssistant,
+    id: number
+  };
+}
+
+
 
 // /usr/order/doAdd 의 응답 타입
 export interface MainApi__order_doAdd__IResponseBody extends Base__IResponseBodyType1 {
@@ -256,23 +322,17 @@ export class MainApi extends HttpClient {
 
   // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
   // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-  public order_doAdd(title:string, funeralHome:string, option1:string, option1qty:number, option2:string, option2qty:number, option3:string, option3qty:number, option4:string, option4qty:number, option5:string, option5qty:number, body:string, directorId:number, clientId:number) {
+  public order_doAdd(title:string, funeralHome:string, head:number, religion:string, startDate:string, endDate:string, body:string, expertId:number, clientId:number) {
     return this.postByForm<MainApi__order_doAdd__IResponseBody>(
       `/usr/order/doAdd`, {
         title,
         funeralHome,
-        option1,
-        option1qty,
-        option2,
-        option2qty,
-        option3,
-        option3qty,
-        option4,
-        option4qty,
-        option5,
-        option5qty,
+        head,
+        religion,
+        startDate,
+        endDate,
         body,
-        directorId,
+        expertId,
         clientId
       }
     );
@@ -280,24 +340,18 @@ export class MainApi extends HttpClient {
 
   // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
   // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-  public order_doModify(id:number, title:string, funeralHome:string, option1:string, option1qty:number, option2:string, option2qty:number, option3:string, option3qty:number, option4:string, option4qty:number, option5:string, option5qty:number, body:string, directorId:number, clientId:number) {
+  public order_doModify(id:number, title:string, funeralHome:string, head:number, religion:string, startDate:string, endDate:string, body:string, expertId:number, clientId:number) {
     return this.postByForm<MainApi__order_doModify__IResponseBody>(
       `/usr/order/doModify`, {
         id,
         title,
         funeralHome,
-        option1,
-        option1qty,
-        option2,
-        option2qty,
-        option3,
-        option3qty,
-        option4,
-        option4qty,
-        option5,
-        option5qty,
+        head,
+        religion,
+        startDate,
+        endDate,
         body,
-        directorId,
+        expertId,
         clientId
       }
     );
@@ -308,17 +362,32 @@ export class MainApi extends HttpClient {
 
   // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
   // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-  public member_doJoin(authLevel:number, loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
-    return this.postByForm<MainApi__member_doJoin__IResponseBody>(
-      `/usr/member/doJoin`, {
-        authLevel,
+  public client_doJoin(loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, genFileIdsStr:string) {
+    return this.postByForm<MainApi__client_doJoin__IResponseBody>(
+      `/usr/client/doJoin`, {
         loginId,
         loginPw,
         name,
-        nickname,
         cellphoneNo,
         email,
-        address,
+        region,
+        genFileIdsStr
+      }
+    );
+  }
+
+  // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public asst_doJoin(loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, career:string, genFileIdsStr:string) {
+    return this.postByForm<MainApi__asst_doJoin__IResponseBody>(
+      `/usr/assistant/doJoin`, {
+        loginId,
+        loginPw,
+        name,
+        cellphoneNo,
+        email,
+        region,
+        career,
         genFileIdsStr
       }
     );
@@ -334,9 +403,29 @@ export class MainApi extends HttpClient {
   }
 
   // http://localhost:8090/usr/member/authKey/loginId=?&loginPw=? 를 요청하고 응답을 받아오는 함수
-  public member_authKey(loginId: string, loginPw: string) {
-    return this.postByForm<MainApi__member_authKey__IResponseBody>(
-      `/usr/member/authKey`, {
+  public client_authKey(loginId: string, loginPw: string) {
+    return this.postByForm<MainApi__client_authKey__IResponseBody>(
+      `/usr/client/authKey`, {
+        loginId,
+        loginPw,
+      }
+    );
+  }
+
+  // http://localhost:8090/usr/member/authKey/loginId=?&loginPw=? 를 요청하고 응답을 받아오는 함수
+  public expert_authKey(loginId: string, loginPw: string) {
+    return this.postByForm<MainApi__expert_authKey__IResponseBody>(
+      `/usr/expert/authKey`, {
+        loginId,
+        loginPw,
+      }
+    );
+  }
+
+  // http://localhost:8090/usr/member/authKey/loginId=?&loginPw=? 를 요청하고 응답을 받아오는 함수
+  public asst_authKey(loginId: string, loginPw: string) {
+    return this.postByForm<MainApi__asst_authKey__IResponseBody>(
+      `/usr/assistant/authKey`, {
         loginId,
         loginPw,
       }
@@ -344,29 +433,80 @@ export class MainApi extends HttpClient {
   }
 
   // http://localhost:8090/usr/detail/id?id=? 를 요청하고 응답을 받아오는 함수
-  public member_detail(id: number) {
-    return this.get<MainApi__member_detail__IResponseBody>(`/usr/member/detail?id=${id}`);
+  public client_detail(id: number) {
+    return this.get<MainApi__client_detail__IResponseBody>(`/usr/client/detail?id=${id}`);
+  }
+
+  // http://localhost:8090/usr/detail/id?id=? 를 요청하고 응답을 받아오는 함수
+  public expert_detail(id: number) {
+    return this.get<MainApi__expert_detail__IResponseBody>(`/usr/expert/detail?id=${id}`);
+  }
+
+  // http://localhost:8090/usr/detail/id?id=? 를 요청하고 응답을 받아오는 함수
+  public asst_detail(id: number) {
+    return this.get<MainApi__asst_detail__IResponseBody>(`/usr/asst/detail?id=${id}`);
   }
 
   // http://localhost:8090/usr/member/list?boardId=? 를 요청하고 응답을 받아오는 함수
-  public director_list() {
-    return this.get<MainApi__director_list__IResponseBody>(`/usr/director/list`);
+  public expert_list() {
+    return this.get<MainApi__expert_list__IResponseBody>(`/usr/expert/list`);
+  }
+
+  // http://localhost:8090/usr/member/list?boardId=? 를 요청하고 응답을 받아오는 함수
+  public asst_list() {
+    return this.get<MainApi__asst_list__IResponseBody>(`/usr/assistant/list`);
   }
 
   // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
   // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-  public member_doModify(id:number, authLevel:number, loginId:string, loginPw:string, name:string, nickname:string, cellphoneNo:string, email:string, address:string, genFileIdsStr:string) {
-    return this.postByForm<MainApi__member_doModify__IResponseBody>(
-      `/usr/member/doModify`, {
+  public client_doModify(id:number, loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, genFileIdsStr:string) {
+    return this.postByForm<MainApi__client_doModify__IResponseBody>(
+      `/usr/client/doModify`, {
         id,
-        authLevel,
         loginId,
         loginPw,
         name,
-        nickname,
         cellphoneNo,
         email,
-        address,
+        region,
+        genFileIdsStr
+      }
+    );
+  }
+
+  // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public expert_doModify(id:number, loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, acknowledgment_step:string, region:string, license:string, career:string, genFileIdsStr:string) {
+    return this.postByForm<MainApi__expert_doModify__IResponseBody>(
+      `/usr/expert/doModify`, {
+        id,
+        loginId,
+        loginPw,
+        name,
+        cellphoneNo,
+        email,
+        acknowledgment_step,
+        region,
+        license,
+        career,
+        genFileIdsStr
+      }
+    );
+  }
+
+  // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public asst_doModify(id:number, loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, career:string, genFileIdsStr:string) {
+    return this.postByForm<MainApi__asst_doModify__IResponseBody>(
+      `/usr/client/doModify`, {
+        id,
+        loginId,
+        loginPw,
+        name,
+        cellphoneNo,
+        email,
+        region,
+        career,
         genFileIdsStr
       }
     );

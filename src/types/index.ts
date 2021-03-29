@@ -7,37 +7,59 @@ export interface IEntity {
 
 
 export interface IOrder extends IEntity {
-  option1:string;
-	option1qty:number;
-	option2:string;
-	option2qty:number;
-	option3:string;
-	option3qty:number;
-	option4:string;
-	option4qty:number;
-	option5:string;
-	option5qty:number;
+	head:number;
+	religion:string;
+	startDate:string;
+	endDate:string;
 	title:string;
   funeralHome:string;
 	body:string;
-	directorId:number;
+	expertId:number;
 	clientId:number;
   stepLevel:number;
-  extra__member:string;
+  extra__clientName:string;
+  extra__expertName:string;
 }
 
-export interface IMember extends IEntity {
+export interface IClient extends IEntity {
   loginId:string;
   loginPw:string;
-  authLevel:number;
   authKey:string;
   name:string;
-  nickname:string;
   cellphoneNo:string;
   email:string;
-  address:string;
+  region:string;
+  extra__thumbImg:string;
+  
+}
+
+export interface IExpert extends IEntity {
+  loginId:string;
+  loginPw:string;
+  authKey:string;
+  acknowledgment_step:string;
+  name:string;
+  cellphoneNo:string;
+  email:string;
+  region:string;
+  license:string;
+  career:string;
   extra__thumbImg:string;
   extra__ratingPoint:number;
+}
+
+export interface IAssistant extends IEntity {
+  loginId:string;
+  loginPw:string;
+  authKey:string;
+  name:string;
+  cellphoneNo:string;
+  email:string;
+  region:string;
+  career:string;
+  extra__thumbImg:string;
+  extra__ratingPoint:number;
+  
 }
 
 export interface IReview extends IEntity{

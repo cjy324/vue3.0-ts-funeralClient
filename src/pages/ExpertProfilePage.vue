@@ -1,48 +1,44 @@
 <template>
   <TitleBar>Profile Page</TitleBar>
 
-  <section class="section section-member-join-form px-2">
+  <section class="section section-expert-join-form px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <div>
           <div title="프로필 이미지">
-            <img v-if="state.member.extra__thumbImg != null" class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + state.member.extra__thumbImg">
-            <img v-if="state.member.extra__thumbImg == null" class="h-96 rounded-lg object-cover object-center" :src="'http://via.placeholder.com/300?text=NoImage'">
+            <img v-if="state.expert.extra__thumbImg != null" class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + state.expert.extra__thumbImg">
+            <img v-if="state.expert.extra__thumbImg == null" class="h-96 rounded-lg object-cover object-center" :src="'http://via.placeholder.com/300?text=NoImage'">
           </div>
           <div title="회원유형">
             <p>회원유형</p>
-            {{state.member.authLevel}}
+            장례지도사
           </div>
           <div title="아이디">
             <p>아이디</p>
-            {{state.member.loginId}}
+            {{state.expert.loginId}}
           </div>
           <div title="이름">
             <p>이름</p>
-            {{state.member.name}}
-          </div>
-          <div title="닉네임">
-            <p>닉네임</p>
-            {{state.member.nickname}}
+            {{state.expert.name}}
           </div>
           <div title="전화번호">
             <p>전화번호</p>
-            {{state.member.cellphoneNo}}
+            {{state.expert.cellphoneNo}}
           </div>
           <div title="이메일">
             <p>이메일</p>
-            {{state.member.email}}
+            {{state.expert.email}}
           </div>
           <div title="주소">
             <p>주소</p>
-            {{state.member.address}}
+            {{state.expert.region}}
           </div>
           <div v-if="globalShare.isLogined">
             <div class="btns">
-              <router-link :to="'/order/doAdd?directorId=' + state.member.id + '&clientId=' + globalShare.loginedMember.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
+              <router-link :to="'/order/doAdd?experId=' + state.expert.id + '&clientId=' + globalShare.loginedExpert.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
                 의뢰요청
               </router-link>
-              <router-link :to="'/review/doAdd?relTypeCode=director&relId=' + state.member.id" class="block btn-secondary mt-2 h-10 w-full rounded-md">
+              <router-link :to="'/review/doAdd?relTypeCode=expert&relId=' + state.expert.id" class="block btn-secondary mt-2 h-10 w-full rounded-md">
                 후기/평점 작성
               </router-link>
             </div>
@@ -56,10 +52,10 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, watch, getCurrentInstance, onMounted } from 'vue'
 import { MainApi } from '../apis'
-import { IMember } from '../types'
+import { IExpert } from '../types'
 
 export default defineComponent({
-  name: 'MemberMyPage',
+  name: 'ExpertProfile',
   props: {
     globalShare: {
       type: Object,
@@ -74,20 +70,20 @@ export default defineComponent({
     const mainApi:MainApi = getCurrentInstance()?.appContext.config.globalProperties.$mainApi;
 
     const state = reactive({
-      member: {} as IMember
+      expert: {} as IExpert
     });
 
-    function loadMember(id:number) {
-      mainApi.member_detail(id)
+    function loadExpert(id:number) {
+      mainApi.expert_detail(id)
       .then(axiosResponse => {
-        state.member = axiosResponse.data.body.member;
+        state.expert = axiosResponse.data.body.expert;
       });
     }
     onMounted(() => {
-      loadMember(props.id);
+      loadExpert(props.id);
     });
     watch(() => props.id, (newValue, oldValue) => {
-      loadMember(props.id);
+      loadExpert(props.id);
     })
 
     return {
