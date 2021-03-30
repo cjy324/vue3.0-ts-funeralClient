@@ -15,6 +15,18 @@
               <option value="4">4점</option>
               <option value="5">5점</option>
             </select>
+평점 : {{ state.ratingPoint }}
+          <div class="form-control">
+            <div class="btn-group">
+              <input type="radio" v-model="state.ratingPoint" ref="ratingPoint1" data-title="1" value="1" class="btn">
+              <input type="radio" v-model="state.ratingPoint" ref="ratingPoint1" data-title="2" value="2" class="btn"> 
+              <input type="radio" v-model="state.ratingPoint" ref="ratingPoint1" data-title="3" value="3" class="btn">
+              <input type="radio" v-model="state.ratingPoint" ref="ratingPoint1" data-title="4" value="4" class="btn">
+              <input type="radio" v-model="state.ratingPoint" ref="ratingPoint1" data-title="5" value="5" class="btn">
+            </div>
+          </div>
+          
+
           </div>
           <div class="btn-success">후기 작성</div>
           <FormRow>
@@ -37,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, getCurrentInstance, onMounted } from 'vue'
+import { defineComponent, reactive, ref, getCurrentInstance, onMounted, vModelRadio, computed } from 'vue'
 import { MainApi } from '../apis'
 import { Router } from 'vue-router'
 import * as Util from '../utils'
@@ -58,7 +70,8 @@ export default defineComponent({
     relTypeCode: {
       type: String,
       required: true
-    }
+    },
+
   },
 
   setup(props){
@@ -67,6 +80,16 @@ export default defineComponent({
 
     const newReviewBodyElRef = ref<HTMLInputElement>();
     const newRatingPointElRef = ref<HTMLInputElement>();
+    const ratingPoint1 = ref<HTMLInputElement>();
+    const ratingPoint2 = ref<HTMLInputElement>();
+    const ratingPoint3 = ref<HTMLInputElement>();
+    const ratingPoint4 = ref<HTMLInputElement>();
+    const ratingPoint5 = ref<HTMLInputElement>();
+
+    const state = reactive({
+      ratingPoint: '',
+      
+    });
 
 
     /* 공백 체크 */
@@ -136,8 +159,15 @@ export default defineComponent({
         newReviewBodyElRef,
         newRatingPointElRef,
         checkAndAddReview,
+        ratingPoint1,
+        ratingPoint2,
+        ratingPoint3,
+        ratingPoint4,
+        ratingPoint5,
+        state,
         
     }
+    
 
   }
   

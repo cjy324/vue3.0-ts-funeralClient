@@ -11,6 +11,7 @@
     "@types/axios": "^0.14.0",
     "@types/lodash": "^4.14.168",
     "axios": "^0.21.1",
+    "daisyui": "^0.15.1",
     "rodash": "^1.0.2",
     "vue": "^3.0.5",
     "vue-router": "^4.0.4"
