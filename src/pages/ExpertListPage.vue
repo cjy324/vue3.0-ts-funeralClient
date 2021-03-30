@@ -83,8 +83,7 @@
         <!--template를 활용하면 v-for문 내 v-for문 즉, 이중v-for문 사용이 가능해진다.-->
         <!--또한, vue3.0부터는 동일 태그내에 v-for랑 v-if를 사용할 수 없는 것 같다.(권장하는 방법이 아닌듯..) -->
         <!--하지만 template를 활용해 v-for를 분리해주면 v-for와 v-if를 동시에 사용가능해진다. -->
-        <template v-bind:key="review.id" v-for="(review, index) in state.reviews" >
-        <div class="mt-2 border-b-2 border-t-2" v-if="review.relId === expert.id">
+        <div class="mt-2 border-b-2 border-t-2" v-bind:key="review.id" v-for="(review, index) in expert.extra__reviews.slice(0, 3)">
             <p class="text-gray-900 p-2">
               {{review.body}} {{index}}
             </p>
@@ -98,7 +97,6 @@
                 <button class="btn-warning" @click="doDeleteReview(review.id)">삭제</button>
             </div>
         </div>
-        </template>
       </div>
       </div>
       </template>
@@ -218,7 +216,7 @@ export default defineComponent({
     })
   */
 
-
+  /*
     const relTypeCode = 'expert';
 
     function loadReviews(relTypeCode:string){
@@ -228,13 +226,13 @@ export default defineComponent({
       });
 
     }
-    
+  */
 
     // onMounted 바로 실행하는 것이 아닌 모든 것이 준비되었을때 실행됨
     onMounted(() => {
       //alert("3");
       loadExperts();
-      loadReviews(relTypeCode);
+     // loadReviews(relTypeCode);
     });
 
 

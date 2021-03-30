@@ -46,6 +46,7 @@ export interface IExpert extends IEntity {
   career:string;
   extra__thumbImg:string;
   extra__ratingPoint:number;
+  extra__reviews:[];
 }
 
 export interface IAssistant extends IEntity {
