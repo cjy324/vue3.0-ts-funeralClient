@@ -9,8 +9,8 @@
 
       <div class="flex-grow"></div>
 
-      <router-link v-if="globalShare.isLogined && !!globalShare.loginedMember.profileImgUrl" :to="'/member/detail?id='+globalShare.loginedMember.id" class="header-bar__profile-img flex items-center">
-        <img :src="'http://localhost:8090' + globalShare.loginedMember.profileImgUrl" class="rounded-full" width="40" height="40" alt="">
+      <router-link v-if="globalShare.isLogined && !!globalShare.loginedClient.profileImgUrl" :to="'/client/detail?id='+globalShare.loginedClient.id" class="header-bar__profile-img flex items-center">
+        <img :src="'http://localhost:8090' + globalShare.loginedClient.profileImgUrl" class="rounded-full" width="40" height="40" alt="">
       </router-link>
 
       <nav class="header-bar__menu-box-1 overflow-x-auto ml-2">
@@ -26,12 +26,12 @@
             </router-link>
           </li>
           <li v-if="globalShare.isLogined">
-            <router-link :to="'/order/list?memberId='+ globalShare.loginedMember.id" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+            <router-link :to="'/order/list?memberId='+ globalShare.loginedClient.id" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               ORDER LIST
             </router-link>
           </li>
           <li v-if="globalShare.isLogined">
-            <router-link :to="'/client/detail?id='+ globalShare.loginedMember.id" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
+            <router-link :to="'/client/detail?id='+ globalShare.loginedClient.id" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
               MyPage
             </router-link>
           </li>

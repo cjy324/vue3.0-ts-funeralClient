@@ -66,5 +66,5 @@ export interface IReview extends IEntity{
   relId:number;
   relTypeCode:string;
   body:string;
-  memberId:number;
+  clientId:number;
 }

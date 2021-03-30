@@ -34,7 +34,7 @@
             {{state.client.region}}
           </div>
           <div>
-            <div class="btns">
+            <div class="btns mt-2">
               <router-link class="btn-secondary" :to="'/client/doModify?id=' + state.client.id">회원정보수정</router-link>
               <router-link class="btn-danger" to="client/doDelete">탈퇴</router-link>
             </div>

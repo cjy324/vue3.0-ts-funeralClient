@@ -5,7 +5,7 @@
   <section class="section section-order-write-form-box px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
-        <div v-if="state.order.id !== undefined && globalShare.loginedMember.id === state.order.clientId">
+        <div v-if="state.order.id !== undefined && globalShare.loginedClient.id === state.order.clientId">
           <div title="진행단계">
             <div class="btn-success">
               진행단계 : 
@@ -21,7 +21,13 @@
           <div>
             <div>
               의뢰인 :
-              {{state.order.extra__member}}
+              {{state.order.extra__clientName}}
+            </div>
+          </div>
+          <div>
+            <div>
+              담당지도사 :
+              {{state.order.extra__expertName}}
             </div>
           </div>
           <div title="장례식장">
@@ -30,45 +36,43 @@
               {{state.order.funeralHome}}
             </div>
           </div>
-          <div title="옵션1">
+          <div title="예상인원">
             <div>
-              옵션1: {{state.order.option1}} / 수량: {{ state.order.option1qty}}
+              예상인원: 
+              {{state.order.head}} 
             </div>
           </div>
-          <div title="옵션2">
+          <div title="종료">
             <div>
-              옵션2: {{state.order.option2}} / 수량: {{ state.order.option2qty}}
+              종교: 
+              {{state.order.religion}}
             </div>
           </div>
-          <div title="옵션3">
+          <div title="장례기간">
             <div>
-              옵션3: {{state.order.option3}} / 수량: {{ state.order.option3qty}}
+              시작일: {{state.order.startDate}} / 종료일: {{ state.order.endDate}}
             </div>
           </div>
-          <div title="옵션4">
+          <div title="상세 요청 사항">
             <div>
-              옵션4: {{state.order.option4}} / 수량: {{ state.order.option4qty}}
-            </div>
-          </div>
-          <div title="옵션5">
-            <div>
-              옵션5: {{state.order.option5}} / 수량: {{ state.order.option5qty}}
+              상세 요청 사항 : 
+              {{state.order.body}}
             </div>
           </div>
           <div>
-            <div class="btns">
-              <router-link v-if="globalShare.loginedMember.id === state.order.clientId" class="btn-secondary" :to="'/order/doModify?id=' + state.order.id">수정</router-link>
-              <router-link v-if="globalShare.loginedMember.id === state.order.clientId" class="btn-danger" to="doDelete">삭제</router-link>
-              <button class="btn-primary">취소</button>
+            <div class="btns mt-2">
+              <router-link v-if="globalShare.loginedClient.id === state.order.clientId" class="btn-secondary" :to="'/order/doModify?id=' + state.order.id">수정</router-link>
+              <router-link v-if="globalShare.loginedClient.id === state.order.clientId" class="btn-danger" to="doDelete">삭제</router-link>
+              <router-link :to="'/order/list?memberId='+ globalShare.loginedClient.id" class="btn-primary">리스트로 가기</router-link>
             </div>
           </div>
         </div>
         <!-- 의뢰인/전문가 구분방법 고민 필요... -->
-        <div v-if="globalShare.loginedMember.id !== state.order.clientId">
+        <div v-if="globalShare.loginedClient.id !== state.order.clientId">
           <p>해당 요청서에 대한 권한이 없습니다.</p>
           <router-link class="btn-link" to="/home/main">홈</router-link>으로 이동
         </div>
-        <div v-if="globalShare.loginedMember.id == null">
+        <div v-if="globalShare.loginedClient.id == null">
           <router-link class="btn-link" to="/member/login">로그인</router-link> 후 이용해주세요.
         </div>
       </div>

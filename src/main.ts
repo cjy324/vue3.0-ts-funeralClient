@@ -87,7 +87,7 @@ const routes = [
     props: (route:any) => ({ globalShare })
   },
   { 
-    path: '/expert/profile', 
+    path: '/expert/detail', 
     component: ExpertProfilePage,
     props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
   },
@@ -124,7 +124,7 @@ const routes = [
   {
     path: '/order/list',
     component: OrderListPage,
-    props: (route:any) => ({clientId: Util.toIntOrUnd(route.query.clientId), globalShare})
+    props: (route:any) => ({memberId: Util.toIntOrUnd(route.query.memberId), globalShare})
   },
   {
     path: '/order/doModify',

@@ -27,7 +27,7 @@
           </FormRow>
         </form>
         <div v-else>
-          <router-link class="btn-link" to="/member/login">로그인</router-link> 후 이용해주세요.
+          <router-link class="btn-link" to="/client/login">로그인</router-link> 후 이용해주세요.
         </div>
       </div>
     </div>
@@ -90,7 +90,7 @@ export default defineComponent({
     
     const raingAdd = (onSuccess:Function) => {
 
-        mainApi.rating_doAdd(props.relTypeCode, props.relId, Util.toIntOrNull(newRatingPointElRef.value?.value), props.globalShare.loginedMember.id)
+        mainApi.rating_doAdd(props.relTypeCode, props.relId, Util.toIntOrNull(newRatingPointElRef.value?.value), props.globalShare.loginedClient.id)
         .then(axiosResponse => {
           
           if ( axiosResponse.data.fail ) {
@@ -106,16 +106,16 @@ export default defineComponent({
 
       const startAddReview = () =>{
       // 작성 함수로 보내기
-          addReview(props.relTypeCode, props.relId, newReviewBodyEl.value, props.globalShare.loginedMember.id);
+          addReview(props.relTypeCode, props.relId, newReviewBodyEl.value, props.globalShare.loginedClient.id);
       }
 
       raingAdd(startAddReview);
     }
 
     //typescript에서는 title:string, body:string 이런식으로 type을 적어주어야 한다
-      function addReview(relTypeCode:string, relId:number, body:string, memberId:number){
+      function addReview(relTypeCode:string, relId:number, body:string, clientId:number){
        
-        mainApi.review_doAdd(relTypeCode, relId, body, memberId)
+        mainApi.review_doAdd(relTypeCode, relId, body, clientId)
         .then(axiosResponse => {
           alert(axiosResponse.data.msg);
           
@@ -128,7 +128,7 @@ export default defineComponent({
           const newReviewId = axiosResponse.data.body.id;
           //alert(newArticleId + "번 게시물 등록 완료!!");
 
-          router.replace("/director/list");
+          router.replace("/expert/list");
         });
       }
 

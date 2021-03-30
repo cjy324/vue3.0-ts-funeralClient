@@ -31,10 +31,10 @@
 					  </select>
           </FormRow>
           <FormRow title="시작일">
-            <input ref="newOrderStartDateElRef" class="form-row-input" type="text" placeholder="시작일을 입력해주세요.">
+            <input ref="newOrderStartDateElRef" class="form-row-input" type="date" placeholder="시작일을 입력해주세요.">
           </FormRow>
           <FormRow title="종료일">
-            <input ref="newOrderEndDateElRef" class="form-row-input" type="text" placeholder="종료일을 입력해주세요.">
+            <input ref="newOrderEndDateElRef" class="form-row-input" type="date" placeholder="종료일을 입력해주세요.">
           </FormRow>
           <FormRow title="추가 요청 사항">
             <textarea ref="newOrderBodyElRef" class="form-row-input" placeholder="내용을 입력해주세요."></textarea>
@@ -170,9 +170,7 @@ export default defineComponent({
       newOrderBodyEl.value = newOrderBodyEl.value.trim();
 
       if(newOrderBodyEl.value.length == 0){
-        alert('내용을 입력해 주세요.')
-        newOrderBodyEl.focus();
-        return;
+        return newOrderBodyEl.value = '추가요청사항이 없습니다.';
       }
 
       // 작성 함수로 보내기

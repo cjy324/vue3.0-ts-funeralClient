@@ -7,69 +7,48 @@
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <form v-if="globalShare.isLogined" v-on:submit.prevent="checkAndModifyOrder">
           <FormRow title="제목">
-            <input ref="modifiedOrderTitleElRef" class="form-row-input" type="text" :value="state.order.title">
+            <input ref="modifiedOrderTitleElRef" class="form-row-input" type="text" placeholder="제목을 입력해주세요." :value="state.order.title">
           </FormRow>
           <FormRow title="장례식장">
-            <input ref="modifiedOrderFuneralHomeElRef" class="form-row-input" type="text" :value="state.order.funeralHome">
+            <input ref="modifiedOrderFuneralHomeElRef" class="form-row-input" type="text" placeholder="장례식장명을 입력해주세요." :value="state.order.funeralHome">
           </FormRow>
-          <FormRow title="옵션1">
-            <input ref="modifiedOrderOption1ElRef" class="form-row-input" type="text" :value="state.order.option1">
-            <select ref="modifiedOrderOption1qtyElRef" name="option1qty" class="form-row-input w-full rounded-sm" :value="state.order.option1qty">
-						  <option value="1">1</option>
-						  <option value="2">2</option>
-						  <option value="3">3</option>
-						  <option value="4">4</option>
-						  <option value="5">5</option>
+          <FormRow title="예상인원">
+            예상인원
+            <select ref="modifiedOrderHeadElRef" class="form-row-input w-full rounded-sm" :value="state.order.head">
+						  <option value="100">100명</option>
+						  <option value="200">200명</option>
+						  <option value="300">300명</option>
+						  <option value="400">400명</option>
+						  <option value="500">500명</option>
 					  </select>
           </FormRow>
-          <FormRow title="옵션2">
-            <input ref="modifiedOrderOption2ElRef" class="form-row-input" type="text" :value="state.order.option2">
-            <select ref="modifiedOrderOption2qtyElRef" name="option1qty" class="form-row-input w-full rounded-sm" :value="state.order.option2qty">
-						  <option value="1">1</option>
-						  <option value="2">2</option>
-						  <option value="3">3</option>
-						  <option value="4">4</option>
-						  <option value="5">5</option>
+          <FormRow title="종교">
+            <select ref="modifiedOrderReligionElRef" class="form-row-input w-full rounded-sm" :value="state.order.religion">
+						  <option value="기독교">기독교</option>
+						  <option value="천주교">천주교</option>
+						  <option value="불교">불교</option>
+						  <option value="기타">기타</option>
 					  </select>
           </FormRow>
-          <FormRow title="옵션3">
-            <input ref="modifiedOrderOption3ElRef" class="form-row-input" type="text" :value="state.order.option3">
-            <select ref="modifiedOrderOption3qtyElRef" name="option1qty" class="form-row-input w-full rounded-sm" :value="state.order.option3qty">
-						  <option value="1">1</option>
-						  <option value="2">2</option>
-						  <option value="3">3</option>
-						  <option value="4">4</option>
-						  <option value="5">5</option>
-					  </select>
+          <FormRow title="시작일">
+            <div>
+              {{ state.order.startDate }}
+            </div>
+            <input ref="modifiedOrderStartDateElRef" class="form-row-input" type="date" :value="state.order.startDate">
           </FormRow>
-          <FormRow title="옵션4">
-            <input ref="modifiedOrderOption4ElRef" class="form-row-input" type="text" :value="state.order.option4">
-            <select ref="modifiedOrderOption4qtyElRef" name="option1qty" class="form-row-input w-full rounded-sm" :value="state.order.option4qty">
-						  <option value="1">1</option>
-						  <option value="2">2</option>
-						  <option value="3">3</option>
-						  <option value="4">4</option>
-						  <option value="5">5</option>
-					  </select>
-          </FormRow>
-          <FormRow title="옵션5">
-            <input ref="modifiedOrderOption5ElRef" class="form-row-input" type="text" :value="state.order.option5">
-            <select ref="modifiedOrderOption5qtyElRef" name="option1qty" class="form-row-input w-full rounded-sm" :value="state.order.option5qty">
-						  <option value="1">1</option>
-						  <option value="2">2</option>
-						  <option value="3">3</option>
-						  <option value="4">4</option>
-						  <option value="5">5</option>
-					  </select>
+          <FormRow title="종료일">
+            <div>
+              {{ state.order.endDate }}
+            </div>
+            <input ref="modifiedOrderEndDateElRef" class="form-row-input" type="date" :value="state.order.endDate">
           </FormRow>
           <FormRow title="추가 요청 사항">
-            <textarea ref="modifiedOrderBodyElRef" class="form-row-input" :value="state.order.body"></textarea>
+            <textarea ref="modifiedOrderBodyElRef" class="form-row-input" placeholder="내용을 입력해주세요." :value="state.order.body"></textarea>
           </FormRow>
-          <FormRow title="완료">
             <div class="btns">
               <input type="submit" value="완료" class="btn-primary" />
+              <router-link :to="'/order/detail?id='+ state.order.id" class="btn-warning">취소</router-link>
             </div>
-          </FormRow>
         </form>
         <div v-else>
           <router-link class="btn-link" to="/member/login">로그인</router-link> 후 이용해주세요.
@@ -108,16 +87,10 @@ export default defineComponent({
 
     const modifiedOrderTitleElRef = ref<HTMLInputElement>();
     const modifiedOrderFuneralHomeElRef = ref<HTMLInputElement>();
-    const modifiedOrderOption1ElRef = ref<HTMLInputElement>();
-    const modifiedOrderOption1qtyElRef = ref<HTMLInputElement>();
-    const modifiedOrderOption2ElRef = ref<HTMLInputElement>();
-    const modifiedOrderOption2qtyElRef = ref<HTMLInputElement>();
-    const modifiedOrderOption3ElRef = ref<HTMLInputElement>();
-    const modifiedOrderOption3qtyElRef = ref<HTMLInputElement>();
-    const modifiedOrderOption4ElRef = ref<HTMLInputElement>();
-    const modifiedOrderOption4qtyElRef = ref<HTMLInputElement>();
-    const modifiedOrderOption5ElRef = ref<HTMLInputElement>();
-    const modifiedOrderOption5qtyElRef = ref<HTMLInputElement>();
+    const modifiedOrderHeadElRef = ref<HTMLInputElement>();
+    const modifiedOrderReligionElRef = ref<HTMLInputElement>();
+    const modifiedOrderStartDateElRef = ref<HTMLInputElement>();
+    const modifiedOrderEndDateElRef = ref<HTMLInputElement>();
     const modifiedOrderBodyElRef = ref<HTMLInputElement>();
 
     const state = reactive({
@@ -169,110 +142,47 @@ export default defineComponent({
         return;
       }
 
-      //옵션1
-      if(modifiedOrderOption1ElRef.value == null){
+      //장례인원
+      if(modifiedOrderHeadElRef.value == null){
         return;
       }
 
-      const modifiedOrderOption1El = modifiedOrderOption1ElRef.value;
-      modifiedOrderOption1El.value = modifiedOrderOption1El.value.trim();
+      const modifiedOrderHeadEl = modifiedOrderHeadElRef.value;
 
-      if(modifiedOrderOption1El.value.length == 0){
-        alert('옵션1을 입력해 주세요.')
-        modifiedOrderOption1El.focus();
+      //종교
+      if(modifiedOrderReligionElRef.value == null){
         return;
       }
 
-      //옵션1qty
-      if(modifiedOrderOption1qtyElRef.value == null){
+      const modifiedOrderReligionEl = modifiedOrderReligionElRef.value;
+
+      //시작일
+      if(modifiedOrderStartDateElRef.value == null){
         return;
       }
 
-      const modifiedOrderOption1qtyEl = modifiedOrderOption1qtyElRef.value;
+      const modifiedOrderStartDateEl = modifiedOrderStartDateElRef.value;
+      modifiedOrderStartDateEl.value = modifiedOrderStartDateEl.value.trim();
 
-      //옵션2
-      if(modifiedOrderOption2ElRef.value == null){
+      if(modifiedOrderStartDateEl.value.length == 0){
+        alert('시작일을 입력해 주세요.')
+        modifiedOrderStartDateEl.focus();
         return;
       }
 
-      const modifiedOrderOption2El = modifiedOrderOption2ElRef.value;
-      modifiedOrderOption2El.value = modifiedOrderOption2El.value.trim();
-
-      if(modifiedOrderOption1El.value.length == 0){
-        alert('옵션2를 입력해 주세요.')
-        modifiedOrderOption2El.focus();
+      //종료일
+      if(modifiedOrderEndDateElRef.value == null){
         return;
       }
 
-      //옵션2qty
-      if(modifiedOrderOption2qtyElRef.value == null){
+      const modifiedOrderEndDateEl = modifiedOrderEndDateElRef.value;
+      modifiedOrderEndDateEl.value = modifiedOrderEndDateEl.value.trim();
+
+      if(modifiedOrderEndDateEl.value.length == 0){
+        alert('종료일을 입력해 주세요.')
+        modifiedOrderEndDateEl.focus();
         return;
       }
-
-      const modifiedOrderOption2qtyEl = modifiedOrderOption2qtyElRef.value;
-
-      //옵션3
-      if(modifiedOrderOption3ElRef.value == null){
-        return;
-      }
-
-      const modifiedOrderOption3El = modifiedOrderOption3ElRef.value;
-      modifiedOrderOption3El.value = modifiedOrderOption3El.value.trim();
-
-      if(modifiedOrderOption3El.value.length == 0){
-        alert('옵션3을 입력해 주세요.')
-        modifiedOrderOption3El.focus();
-        return;
-      }
-
-      //옵션3qty
-      if(modifiedOrderOption3qtyElRef.value == null){
-        return;
-      }
-
-      const modifiedOrderOption3qtyEl = modifiedOrderOption3qtyElRef.value;
-
-      //옵션4
-      if(modifiedOrderOption4ElRef.value == null){
-        return;
-      }
-
-      const modifiedOrderOption4El = modifiedOrderOption4ElRef.value;
-      modifiedOrderOption4El.value = modifiedOrderOption4El.value.trim();
-
-      if(modifiedOrderOption4El.value.length == 0){
-        alert('옵션4를 입력해 주세요.')
-        modifiedOrderOption4El.focus();
-        return;
-      }
-
-      //옵션4qty
-      if(modifiedOrderOption4qtyElRef.value == null){
-        return;
-      }
-
-      const modifiedOrderOption4qtyEl = modifiedOrderOption4qtyElRef.value;
-
-      //옵션5
-      if(modifiedOrderOption5ElRef.value == null){
-        return;
-      }
-
-      const modifiedOrderOption5El = modifiedOrderOption5ElRef.value;
-      modifiedOrderOption5El.value = modifiedOrderOption5El.value.trim();
-
-      if(modifiedOrderOption5El.value.length == 0){
-        alert('옵션5를 입력해 주세요.')
-        modifiedOrderOption5El.focus();
-        return;
-      }
-
-      //옵션5qty
-      if(modifiedOrderOption5qtyElRef.value == null){
-        return;
-      }
-
-      const modifiedOrderOption5qtyEl = modifiedOrderOption5qtyElRef.value;
 
 
       //body
@@ -290,14 +200,14 @@ export default defineComponent({
       }
 
       // 작성 함수로 보내기
-      modifyOrder(props.id, modifiedOrderTitleEl.value, modifiedOrderFuneralHomeEl.value, modifiedOrderOption1El.value, parseInt(modifiedOrderOption1qtyEl.value), modifiedOrderOption2El.value, parseInt(modifiedOrderOption2qtyEl.value), modifiedOrderOption3El.value, parseInt(modifiedOrderOption3qtyEl.value), modifiedOrderOption4El.value, parseInt(modifiedOrderOption4qtyEl.value), modifiedOrderOption5El.value, parseInt(modifiedOrderOption5qtyEl.value), modifiedOrderBodyEl.value, state.order.directorId, props.globalShare.loginedMember.id);
+      modifyOrder(props.id, modifiedOrderTitleEl.value, modifiedOrderFuneralHomeEl.value, parseInt(modifiedOrderHeadEl.value), modifiedOrderReligionEl.value, modifiedOrderStartDateEl.value, modifiedOrderEndDateEl.value, modifiedOrderBodyEl.value, state.order.expertId, props.globalShare.loginedClient.id);
 
     }
 
     //typescript에서는 title:string, body:string 이런식으로 type을 적어주어야 한다
-      function modifyOrder(id:number, title:string, funeralHome:string, option1:string, option1qty:number, option2:string, option2qty:number, option3:string, option3qty:number, option4:string, option4qty:number, option5:string, option5qty:number, body:string, directorId:number, clientId:number){
+      function modifyOrder(id:number, title:string, funeralHome:string, head:number, religion:string, startDate:string, endDate:string, body:string, expertId:number, clientId:number){
        
-        mainApi.order_doModify(id, title, funeralHome, option1, option1qty, option2, option2qty, option3, option3qty, option4, option4qty, option5, option5qty, body, directorId, clientId)
+        mainApi.order_doModify(id, title, funeralHome, head, religion, startDate, endDate, body, expertId, clientId)
         .then(axiosResponse => {
           alert(axiosResponse.data.msg);
           
@@ -318,16 +228,10 @@ export default defineComponent({
         state,
         modifiedOrderTitleElRef,
         modifiedOrderFuneralHomeElRef,
-        modifiedOrderOption1ElRef,
-        modifiedOrderOption1qtyElRef,
-        modifiedOrderOption2ElRef,
-        modifiedOrderOption2qtyElRef,
-        modifiedOrderOption3ElRef,
-        modifiedOrderOption3qtyElRef,
-        modifiedOrderOption4ElRef,
-        modifiedOrderOption4qtyElRef,
-        modifiedOrderOption5ElRef,
-        modifiedOrderOption5qtyElRef,
+        modifiedOrderHeadElRef,
+        modifiedOrderReligionElRef,
+        modifiedOrderStartDateElRef,
+        modifiedOrderEndDateElRef,
         modifiedOrderBodyElRef,
         checkAndModifyOrder,
       

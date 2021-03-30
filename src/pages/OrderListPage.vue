@@ -38,58 +38,41 @@
         </div>
         <!--담당지도사-->
         <h1 class="font-semibold text-gray-900 leading-none text-xl mt-1 mb-3 capitalize break-normal">
-          담당자회원번호: {{order.directorId}}
+          담당지도사: {{order.extra__expertName}}
         </h1>
         <!--의뢰인명-->
         <h1 class="font-semibold text-gray-900 leading-none text-xl mt-1 mb-3 capitalize break-normal">
-          의뢰인: {{order.extra__member}}
+          의뢰인: {{order.extra__clientName}}
         </h1>
          <!--장례식장-->
         <h1 class="font-semibold text-gray-900 leading-none text-xl mt-1 mb-3 capitalize break-normal">
           장례식장: {{order.funeralHome}}
         </h1>
-        <!--옵션-->
+        <!--예상인원-->
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
-          옵션1
+          예상인원
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - 내용: {{ order.option1 }} / 수량: {{ order.option1qty }}
+            -  {{ order.head }}
           </p>
         </div>
+        <!--종교-->
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
-          옵션2
+          종교
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - 내용: {{ order.option2 }} / 수량: {{ order.option2qty }}
+            -  {{ order.religion }}
           </p>
         </div>
+        <!--장례기간-->
         <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
-          옵션3
+          장례기간
           <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - 내용: {{ order.option3 }} / 수량: {{ order.option3qty }}
-          </p>
-        </div>
-        <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
-          옵션4
-          <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - 내용: {{ order.option4 }} / 수량: {{ order.option4qty }}
-          </p>
-        </div>
-        <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
-          옵션5
-          <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - 내용: {{ order.option5 }} / 수량: {{ order.option5qty }}
-          </p>
-        </div>
-        <!--추가 요청 내용-->
-        <div class="max-w-full border mt-2 p-1 pl-2 rounded-md">
-          추가 요청사항
-          <p class="text-base font-medium tracking-wide text-gray-600 mt-1">
-            - {{ order.body }}
+            - 시작일: {{ order.startDate }} / 종료일: {{ order.endDate }}
           </p>
         </div>
         <router-link :to="'/order/detail?id=' + order.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
             상세보기
         </router-link>
-        <router-link :to="'/review/doAdd?relTypeCode=director&relId=' + order.directorId" class="block btn-secondary mt-2 h-10 w-full rounded-md">
+        <router-link :to="'/review/doAdd?relTypeCode=expert&relId=' + order.expertId" class="block btn-secondary mt-2 h-10 w-full rounded-md">
             후기/평점 작성
         </router-link>
         

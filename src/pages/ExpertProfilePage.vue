@@ -35,7 +35,7 @@
           </div>
           <div v-if="globalShare.isLogined">
             <div class="btns">
-              <router-link :to="'/order/doAdd?experId=' + state.expert.id + '&clientId=' + globalShare.loginedExpert.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
+              <router-link :to="'/order/doAdd?experId=' + state.expert.id + '&clientId=' + globalShare.loginedClient.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
                 의뢰요청
               </router-link>
               <router-link :to="'/review/doAdd?relTypeCode=expert&relId=' + state.expert.id" class="block btn-secondary mt-2 h-10 w-full rounded-md">

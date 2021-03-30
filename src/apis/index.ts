@@ -299,12 +299,11 @@ export class MainApi extends HttpClient {
 
       //비정상 로그인인 경우 localStorage 초기화
       localStorage.removeItem("authKey");
-      localStorage.removeItem("loginedMemberId");
-      localStorage.removeItem("loginedMemberName");
-      localStorage.removeItem("loginedMemberNickname");
-      localStorage.removeItem("loginedMemberProfileImgUrl");
+      localStorage.removeItem("loginedClientId");
+      localStorage.removeItem("loginedClientName");
+      localStorage.removeItem("loginedClientProfileImgUrl");
 
-      location.replace('/usr/member/login');
+      location.replace('/usr/client/login');
     }
 
     return axiosResponse;
@@ -515,13 +514,13 @@ export class MainApi extends HttpClient {
 
   // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
   // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-  public review_doAdd(relTypeCode:string, relId:number, body:string, memberId:number) {
+  public review_doAdd(relTypeCode:string, relId:number, body:string, clientId:number) {
     return this.postByForm<MainApi__review_doAdd__IResponseBody>(
       `/usr/review/doAdd`, {
         relTypeCode,
         relId,
         body,
-        memberId,
+        clientId,
         
       }
     );
@@ -540,13 +539,13 @@ export class MainApi extends HttpClient {
 
   // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
   // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-  public rating_doAdd(relTypeCode:string, relId:number, point:number, memberId:number) {
+  public rating_doAdd(relTypeCode:string, relId:number, point:number, clientId:number) {
     return this.postByForm<MainApi__rating_doAdd__IResponseBody>(
       `/usr/rating/doAdd`, {
         relTypeCode,
         relId,
         point,
-        memberId,
+        clientId,
         
       }
     );

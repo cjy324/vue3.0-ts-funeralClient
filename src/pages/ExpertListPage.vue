@@ -25,10 +25,10 @@
         </div>
         <!--이름-->
         <div class="text-center m-4">
-          <router-link :to="'/expert/profile?id=' + expert.id" class="text-indigo-500 font-bold text-xl md:text-2xl hover:text-gray-700">
+          <router-link :to="'/expert/detail?id=' + expert.id" class="text-indigo-500 font-bold text-xl md:text-2xl hover:text-gray-700">
             {{ expert.name }}
           </router-link>
-          <router-link :to="'/expert/profile?id=' + expert.id" class="block btn-success mt-2 h-10 w-full rounded-md">
+          <router-link :to="'/expert/detail?id=' + expert.id" class="block btn-success mt-2 h-10 w-full rounded-md">
           상세보기
         </router-link>
         </div>
@@ -56,7 +56,7 @@
             - {{ expert.regDate }}
           </p>
         </div>
-        <router-link :to="'/order/doAdd?expertId=' + expert.id + '&clientId=' + globalShare.loginedExpert.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
+        <router-link :to="'/order/doAdd?expertId=' + expert.id + '&clientId=' + globalShare.loginedClient.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
           의뢰요청
         </router-link>
         <!--평점-->
@@ -89,9 +89,9 @@
               {{review.body}} {{index}}
             </p>
             <p class="text-gray-500 p-2 text-sm">
-              {{review.updateDate}} / {{review.extra__writer}}
+              {{review.updateDate}} / {{review.extra__clientName}}
             </p>
-            <div class="btns" v-if="globalShare.loginedClient.id === review.expertId">
+            <div class="btns" v-if="globalShare.loginedClient.id === review.clientId">
                 <router-link :to="'/review/doAdd?relTypeCode=expert&relId=' + expert.id" class="btn-secondary">
                   수정
                 </router-link>

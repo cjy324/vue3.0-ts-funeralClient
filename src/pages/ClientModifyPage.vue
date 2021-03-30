@@ -6,7 +6,8 @@
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <form v-if="globalShare.isLogined" v-on:submit.prevent="checkAndModify">
           <div title="프로필 이미지">
-            <img class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + state.client.extra__thumbImg">
+            <img v-if="state.client.extra__thumbImg != null" class="h-96 rounded-lg object-cover object-center" :src="'http://localhost:8090' + state.client.extra__thumbImg">
+            <img v-if="state.client.extra__thumbImg == null" class="h-96 rounded-lg object-cover object-center" :src="'http://via.placeholder.com/300?text=NoImage'">
           </div>
           <FormRow title="프로필 이미지">
             <input ref="profileImgElRef" class="form-row-input" type="file">
@@ -32,11 +33,10 @@
           <FormRow title="시/도">
             <input ref="regionElRef" class="form-row-input" type="text" :value="state.client.region">
           </FormRow>
-          <FormRow title="완료">
             <div class="btns">
               <input type="submit" value="완료" class="btn-primary" />
+              <router-link :to="'/client/detail?id='+ state.client.id" class="btn-warning">취소</router-link>
             </div>
-          </FormRow>
         </form>
         <div v-else>
           이미 로그인 상태입니다. <router-link class="btn-link" to="/">홈</router-link> 으로 이동
@@ -218,20 +218,12 @@ export default defineComponent({
       };
 
 
-      //회원가입 join함수 시작
-      //파일첨부기능 추가로 인해 로직 변경
-      //join(loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value);
       const startModify = (genFileIdsStr:string) =>{
         modify(props.id, loginIdEl.value, loginPwEl.value, nameEl.value, cellphoneNoEl.value, emailEl.value, regionEl.value, genFileIdsStr);
       };
 
-      //startFileUpload 로직을 먼저 실행한 후
-      //onSuccess 즉, startJoin를 실행한다. onSuccess = startJoin
-      //실행 순서 : 1.첨부파일이 있는지 확인하고 업로드까지 진행하는 startFileUpload함수 종료 후 2.회원가입 join함수가 실행된다.
       startFileUpload(startModify);
 
-
-      
     }
     function modify(id:number, loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, genFileIdsStr:string) {
       mainApi.client_doModify(id, loginId, loginPw, name, cellphoneNo, email, region, genFileIdsStr)
