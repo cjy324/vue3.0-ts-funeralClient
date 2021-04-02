@@ -25,13 +25,38 @@
               DIRECTOR's
             </router-link>
           </li>
-          <li v-if="globalShare.isLogined">
-            <router-link :to="'/order/list?memberId='+ globalShare.loginedClient.id" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+          <li>
+            <router-link to="/assistant/list" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+              ASSISTANT's
+            </router-link>
+          </li>
+          <li v-if="globalShare.loginedAssistantId !== null">
+            <router-link to="/order/listForAsst" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+              FUNERAL LIST
+            </router-link>
+          </li>
+          <li v-if="globalShare.loginedClient.id !== null">
+            <router-link :to="'/order/list?memberId='+ globalShare.loginedClient.id + '&memberType=client'" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               ORDER LIST
             </router-link>
           </li>
-          <li v-if="globalShare.isLogined">
-            <router-link :to="'/client/detail?id='+ globalShare.loginedClient.id" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
+          <li v-if="globalShare.loginedExpert.id !== null">
+            <router-link :to="'/order/list?memberId='+ globalShare.loginedExpert.id + '&memberType=expert'" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+              ORDER LIST
+            </router-link>
+          </li>
+          <li v-if="globalShare.loginedClient.id !== null">
+            <router-link :to="'/client/myPage?id='+ globalShare.loginedClient.id" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
+              MyPage
+            </router-link>
+          </li>
+          <li v-if="globalShare.loginedAssistant.id !== null">
+            <router-link :to="'/assistant/myPage?id='+ globalShare.loginedAssistant.id" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
+              MyPage
+            </router-link>
+          </li>
+          <li v-if="globalShare.loginedExpert.id !== null">
+            <router-link :to="'/expert/myPage?id='+ globalShare.loginedExpert.id" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
               MyPage
             </router-link>
           </li>
@@ -42,7 +67,17 @@
           </li>
           <li v-if="globalShare.isLogined == false">
             <router-link to="/client/login" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
-              Log-in
+              Log-in(Client)
+            </router-link>
+          </li>
+          <li v-if="globalShare.isLogined == false">
+            <router-link to="/assistant/login" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+              Log-in(Assistant)
+            </router-link>
+          </li>
+          <li v-if="globalShare.isLogined == false">
+            <router-link to="/expert/login" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+              Log-in(Expert)
             </router-link>
           </li>
           <li v-if="globalShare.isLogined">
@@ -74,6 +109,27 @@ export default defineComponent({
       required: true
     }
   },
+  setup(props){
+
+    let memberId = 0;
+
+    if(props.globalShare.loginedClientId !== 0){
+      memberId = props.globalShare.loginedClientId;
+      return memberId;
+    }
+    if(props.globalShare.loginedAssistantId !== 0){
+      memberId = props.globalShare.loginedClientId;
+      return memberId;
+    }
+    if(props.globalShare.loginedClientId !== 0){
+      memberId = props.globalShare.loginedClientId;
+      return memberId;
+    }
+  return{
+      memberId
+  }
+  },
+
   components: {
   }
 });

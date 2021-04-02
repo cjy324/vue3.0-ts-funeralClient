@@ -72,8 +72,8 @@
         <router-link :to="'/order/detail?id=' + order.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
             상세보기
         </router-link>
-        <router-link :to="'/review/doAdd?relTypeCode=expert&relId=' + order.expertId" class="block btn-secondary mt-2 h-10 w-full rounded-md">
-            후기/평점 작성
+        <router-link :to="'/funeral/doApply?relTypeCode=expert&relId=' + " class="block btn-secondary mt-2 h-10 w-full rounded-md">
+            지원하기
         </router-link>
         
       </div>
@@ -95,7 +95,7 @@ const searchKeywordElRef = ref<HTMLInputElement>();
 const selectStepLevelElRef = ref<HTMLInputElement>();
 
 export default defineComponent({
-  name: 'OrderListPage',
+  name: 'OrderListPageForAsst',
 
 //props 속성은 컴포넌트 간에 데이터를 전달할 수 있는 컴포넌트 통신 방법입니다. 
 //props 속성을 기억할 때는 상위 컴포넌트에서 하위 컴포넌트로 내려보내는 데이터 속성으로 기억하면 쉽습니다
@@ -104,14 +104,6 @@ export default defineComponent({
       type: Object,
       required: true
     },
-    memberId: {
-      type: Number,
-      required: true
-    },
-    memberType: {
-      type: String,
-      required: true
-    }
   },
 
   setup(props){
@@ -210,21 +202,10 @@ export default defineComponent({
       return filteredOrders
     })
 
-    const memberId = props.memberId;
 
-    let memberType = null;
-    if(props.memberType == 'client'){
-      memberType = 'client'
-      return memberType;
-    }
-    if(props.memberType == 'expert'){
-      memberType = 'expert'
-      return memberType;
-    }
-
-    function loadOrders(memberId:number, memberType:string){
+    function loadOrders(){
       //alert("4");
-      mainApi.order_list(memberId, memberType)
+      mainApi.order_list_forAssistant()
       .then(axiosResponse => {
           state.orders = axiosResponse.data.body.orders;
       });
@@ -234,7 +215,7 @@ export default defineComponent({
     // onMounted 바로 실행하는 것이 아닌 모든 것이 준비되었을때 실행됨
     onMounted(() => {
       //alert("3");
-      loadOrders(memberId, memberType);
+      loadOrders();
     });
 
 

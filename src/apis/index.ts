@@ -103,6 +103,13 @@ export interface MainApi__order_list__IResponseBody extends Base__IResponseBodyT
   };
 }
 
+// /usr/article/list 의 응답 타입
+export interface MainApi__order_list_forAssistant__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    orders: IOrder[]
+  };
+}
+
 // /usr/article/detail 의 응답 타입
 export interface MainApi__order_detail__IResponseBody extends Base__IResponseBodyType1 {
   body:{
@@ -118,7 +125,7 @@ export interface MainApi__client_doJoin__IResponseBody extends Base__IResponseBo
 }
 
 // /usr/member/doJoin 의 응답 타입
-export interface MainApi__asst_doJoin__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__assistant_doJoin__IResponseBody extends Base__IResponseBodyType1 {
   body:{
     id: number
   };
@@ -149,10 +156,10 @@ export interface MainApi__expert_authKey__IResponseBody extends Base__IResponseB
 
 
 // /usr/member/authKey 의 응답 타입
-export interface MainApi__asst_authKey__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__assistant_authKey__IResponseBody extends Base__IResponseBodyType1 {
   body:{
     authKey : string,
-    asst : IAssistant,
+    assistant : IAssistant,
   };
 }
 
@@ -167,12 +174,12 @@ export interface MainApi__expert_list__IResponseBody extends Base__IResponseBody
 }
 
 // /usr/member/list 의 응답 타입
-export interface MainApi__asst_list__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__assistant_list__IResponseBody extends Base__IResponseBodyType1 {
   body:{
     //응답을 받기위해선 key명이 백엔드와 동일해야 함
     //또한 백엔드로부터 ResultData와 같이 json형태로 받아야 함
     //ex) return new ResultData("S-1", "성공", "members", members);
-    assts: IAssistant[]
+    assistants: IAssistant[]
   };
 }
 
@@ -191,9 +198,9 @@ export interface MainApi__expert_detail__IResponseBody extends Base__IResponseBo
 }
 
 // /usr/member/detail 의 응답 타입
-export interface MainApi__asst_detail__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__assistant_detail__IResponseBody extends Base__IResponseBodyType1 {
   body:{
-    asst: IAssistant
+    assistant: IAssistant
   };
 }
 
@@ -214,9 +221,9 @@ export interface MainApi__expert_doModify__IResponseBody extends Base__IResponse
 }
 
 // /usr/member/doModify 의 응답 타입
-export interface MainApi__asst_doModify__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__assistant_doModify__IResponseBody extends Base__IResponseBodyType1 {
   body:{
-    asst: IAssistant,
+    assistant: IAssistant,
     id: number
   };
 }
@@ -302,6 +309,12 @@ export class MainApi extends HttpClient {
       localStorage.removeItem("loginedClientId");
       localStorage.removeItem("loginedClientName");
       localStorage.removeItem("loginedClientProfileImgUrl");
+      localStorage.removeItem("loginedAssistantId");
+      localStorage.removeItem("loginedAssistantName");
+      localStorage.removeItem("loginedAssistantProfileImgUrl");
+      localStorage.removeItem("loginedExpertId");
+      localStorage.removeItem("loginedExpertName");
+      localStorage.removeItem("loginedExpertProfileImgUrl");
 
       location.replace('/usr/client/login');
     }
@@ -310,8 +323,12 @@ export class MainApi extends HttpClient {
   }
 
   // http://localhost:8090/usr/article/list?boardId=? 를 요청하고 응답을 받아오는 함수
-  public order_list(memberId:number) {
-    return this.get<MainApi__order_list__IResponseBody>(`/usr/order/list?memberId=${memberId}`);
+  public order_list(memberId:number, memberType:string) {
+    return this.get<MainApi__order_list__IResponseBody>(`/usr/order/list?memberId=${memberId}&memberType=${memberType}`);
+  }
+  // http://localhost:8090/usr/article/list?boardId=? 를 요청하고 응답을 받아오는 함수
+  public order_list_forAssistant() {
+    return this.get<MainApi__order_list_forAssistant__IResponseBody>(`/usr/order/listForAsst`);
   }
 
   // http://localhost:8090/usr/detail/id?id=? 를 요청하고 응답을 받아오는 함수
@@ -377,8 +394,8 @@ export class MainApi extends HttpClient {
 
   // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
   // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-  public asst_doJoin(loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, career:string, genFileIdsStr:string) {
-    return this.postByForm<MainApi__asst_doJoin__IResponseBody>(
+  public assistant_doJoin(loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, career:string, genFileIdsStr:string) {
+    return this.postByForm<MainApi__assistant_doJoin__IResponseBody>(
       `/usr/assistant/doJoin`, {
         loginId,
         loginPw,
@@ -422,8 +439,8 @@ export class MainApi extends HttpClient {
   }
 
   // http://localhost:8090/usr/member/authKey/loginId=?&loginPw=? 를 요청하고 응답을 받아오는 함수
-  public asst_authKey(loginId: string, loginPw: string) {
-    return this.postByForm<MainApi__asst_authKey__IResponseBody>(
+  public assistant_authKey(loginId: string, loginPw: string) {
+    return this.postByForm<MainApi__assistant_authKey__IResponseBody>(
       `/usr/assistant/authKey`, {
         loginId,
         loginPw,
@@ -442,8 +459,8 @@ export class MainApi extends HttpClient {
   }
 
   // http://localhost:8090/usr/detail/id?id=? 를 요청하고 응답을 받아오는 함수
-  public asst_detail(id: number) {
-    return this.get<MainApi__asst_detail__IResponseBody>(`/usr/asst/detail?id=${id}`);
+  public assistant_detail(id: number) {
+    return this.get<MainApi__assistant_detail__IResponseBody>(`/usr/assistant/detail?id=${id}`);
   }
 
   // http://localhost:8090/usr/member/list?boardId=? 를 요청하고 응답을 받아오는 함수
@@ -452,8 +469,8 @@ export class MainApi extends HttpClient {
   }
 
   // http://localhost:8090/usr/member/list?boardId=? 를 요청하고 응답을 받아오는 함수
-  public asst_list() {
-    return this.get<MainApi__asst_list__IResponseBody>(`/usr/assistant/list`);
+  public assistant_list() {
+    return this.get<MainApi__assistant_list__IResponseBody>(`/usr/assistant/list`);
   }
 
   // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
@@ -495,8 +512,8 @@ export class MainApi extends HttpClient {
 
   // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
   // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
-  public asst_doModify(id:number, loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, career:string, genFileIdsStr:string) {
-    return this.postByForm<MainApi__asst_doModify__IResponseBody>(
+  public assistant_doModify(id:number, loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, career:string, genFileIdsStr:string) {
+    return this.postByForm<MainApi__assistant_doModify__IResponseBody>(
       `/usr/client/doModify`, {
         id,
         loginId,
