@@ -252,6 +252,12 @@ export interface MainApi__order_doModify__IResponseBody extends Base__IResponseB
   };
 }
 
+export interface MainApi__order_changeStepLevel__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number
+  };
+}
+
 // /usr/review/doAdd 의 응답 타입
 export interface MainApi__review_doAdd__IResponseBody extends Base__IResponseBodyType1 {
   body:{
@@ -382,6 +388,11 @@ export class MainApi extends HttpClient {
         clientId
       }
     );
+  }
+
+  // http://localhost:8090/usr/detail/id?id=? 를 요청하고 응답을 받아오는 함수
+  public order_changeStepLevel(id: number, stepLevel: number) {
+    return this.get<MainApi__order_changeStepLevel__IResponseBody>(`/usr/order/changeStepLevel?id=${id}&stepLevel=${stepLevel}`);
   }
 
   

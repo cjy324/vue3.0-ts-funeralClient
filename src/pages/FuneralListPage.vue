@@ -1,5 +1,5 @@
 <template>
-  <!-- 메인-요청 리스트 시작 -->
+  <!-- 메인-장례 리스트 시작 -->
   <section class="funeralList-section bg-gray-500">
     <div class="h-2 bg-gray-500"></div>
     <!--리스트 search 시작-->
@@ -9,8 +9,8 @@
         <option value="1">요청서 검토중</option>
         <option value="2">장례준비중</option>
         <option value="3">장례진행중</option>
-        <option value="4">장례종료(결제대기중)</option>
-        <option value="5">결제완료</option>
+        <option value="4">장례종료(확인대기중)</option>
+        <option value="5">장례종료(최종종료)</option>
       </select>
       <select class="h-full w-1/4" id="" @change="onChangeSearchKeywordType($event)">
         <option value="title">제목</option>
@@ -156,19 +156,19 @@ export default defineComponent({
     function returnToString(stepLevel:any) {
       let stepLevelToStr = ''; 
       if(stepLevel == 1){
-        stepLevelToStr = '요청서 검토중';
+        stepLevelToStr = '의뢰요청(의뢰검토중)';
       }
       if(stepLevel == 2){
-        stepLevelToStr = '외뢰승인(장례준비중)';
+        stepLevelToStr = '의뢰승인(장례준비중)';
       }
       if(stepLevel == 3){
         stepLevelToStr = '장례진행중';
       }
       if(stepLevel == 4){
-        stepLevelToStr = '장례종료(결제대기중)';
+        stepLevelToStr = '장례종료(종료확인요청)';
       }
       if(stepLevel == 5){
-        stepLevelToStr = '결제완료';
+        stepLevelToStr = '종료확인(최종종료)';
       }
 
       return stepLevelToStr;

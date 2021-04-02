@@ -25,11 +25,6 @@
               DIRECTOR's
             </router-link>
           </li>
-          <li>
-            <router-link to="/assistant/list" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
-              ASSISTANT's
-            </router-link>
-          </li>
           <li v-if="globalShare.loginedAssistant.id !== null || globalShare.loginedExpert.id !== null">
             <router-link to="/funeral/list" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               FUNERAL LIST
@@ -37,12 +32,12 @@
           </li>
           <li v-if="globalShare.loginedClient.id !== null">
             <router-link :to="'/order/list?memberId='+ globalShare.loginedClient.id + '&memberType=client'" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
-              ORDER LIST
+             MY ORDER LIST
             </router-link>
           </li>
           <li v-if="globalShare.loginedExpert.id !== null">
             <router-link :to="'/order/list?memberId='+ globalShare.loginedExpert.id + '&memberType=expert'" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
-              ORDER LIST
+             MY ORDER LIST
             </router-link>
           </li>
           <li v-if="globalShare.loginedExpert.id !== null">

@@ -9,8 +9,8 @@
         <option value="1">요청서 검토중</option>
         <option value="2">장례준비중</option>
         <option value="3">장례진행중</option>
-        <option value="4">장례종료(결제대기중)</option>
-        <option value="5">결제완료</option>
+        <option value="4">장례종료(확인대기중)</option>
+        <option value="5">장례종료(최종종료)</option>
       </select>
       <select class="h-full w-1/4" id="" @change="onChangeSearchKeywordType($event)">
         <option value="title">제목</option>
@@ -27,7 +27,19 @@
       <div class="mt-6" v-bind:key="order.id" v-for="order in filteredOrders">
       <div class="orderList-section-grid__body p-8 bg-white m-2 border rounded-xl">
         <!--진행단계-->
-        <div class="btn-success">
+        <div v-if="order.stepLevel==1" class="btn-success">
+          진행단계: {{returnToString(order.stepLevel)}}
+        </div>
+        <div v-if="order.stepLevel==2" class="btn-secondary">
+          진행단계: {{returnToString(order.stepLevel)}}
+        </div>
+        <div v-if="order.stepLevel==3" class="btn-warning">
+          진행단계: {{returnToString(order.stepLevel)}}
+        </div>
+        <div v-if="order.stepLevel==4" class="btn-primary">
+          진행단계: {{returnToString(order.stepLevel)}}
+        </div>
+        <div v-if="order.stepLevel==5" class="btn-primary">
           진행단계: {{returnToString(order.stepLevel)}}
         </div>
         <!--제목-->
@@ -72,9 +84,32 @@
         <router-link :to="'/order/detail?id=' + order.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
             상세보기
         </router-link>
-        <router-link :to="'/review/doAdd?relTypeCode=expert&relId=' + order.expertId" class="block btn-secondary mt-2 h-10 w-full rounded-md">
+        <div class="btns text-center" v-if="globalShare.loginedExpert.id == order.expertId">
+          <button v-if="order.stepLevel==1" class="btn-secondary" @click="changeStepLevel(order.id, order.stepLevel)">
+            의뢰수락(장례준비)
+          </button>
+          <button v-if="order.stepLevel==2" class="btn-success" @click="changeStepLevel(order.id, order.stepLevel)">
+            장례진행
+          </button>
+          <button v-if="order.stepLevel==2" class="btn-success" @click="changeStepLevel(order.id, order.stepLevel)">
+            장례종료(확인요청)
+          </button>
+        </div>
+        <div class="btns text-center" v-if="globalShare.loginedClient.id == order.clientId">
+          <div v-if="order.stepLevel==2" class="btn-success">
+            장례준비중
+          </div>
+          <div v-if="order.stepLevel==3" class="btn-success">
+            장례진행중
+          </div>
+          <button v-if="order.stepLevel==4" class="btn-success" @click="changeStepLevel(order.id, order.stepLevel)">
+            장례종료(확인)
+          </button>
+        </div>
+        <router-link v-if="globalShare.loginedClient.id == order.clientId" :to="'/review/doAdd?relTypeCode=expert&relId=' + order.expertId" class="block btn-secondary mt-2 h-10 w-full rounded-md">
             후기/평점 작성
         </router-link>
+        
         
       </div>
       </div>
@@ -158,20 +193,21 @@ export default defineComponent({
     function returnToString(stepLevel:any) {
       let stepLevelToStr = ''; 
       if(stepLevel == 1){
-        stepLevelToStr = '요청서 검토중';
+        stepLevelToStr = '의뢰요청(의뢰검토중)';
       }
       if(stepLevel == 2){
-        stepLevelToStr = '외뢰승인(장례준비중)';
+        stepLevelToStr = '의뢰승인(장례준비중)';
       }
       if(stepLevel == 3){
         stepLevelToStr = '장례진행중';
       }
       if(stepLevel == 4){
-        stepLevelToStr = '장례종료(결제대기중)';
+        stepLevelToStr = '장례종료(종료확인요청)';
       }
       if(stepLevel == 5){
-        stepLevelToStr = '결제완료';
+        stepLevelToStr = '종료확인(최종종료)';
       }
+      
 
       return stepLevelToStr;
     }
@@ -225,6 +261,19 @@ export default defineComponent({
       loadOrders(props.memberId, props.memberType);
     });
 
+    function changeStepLevel(id:number, stepLevel:number){
+      if(confirm('정말 수락하시겠습니까?') == false){
+        return;
+      }
+      mainApi.order_changeStepLevel(id, stepLevel)
+      .then(axiosResponse => {
+          alert(axiosResponse.data.msg);
+          if ( axiosResponse.data.fail ) {
+            return;
+          }
+        window.location.reload();
+      });
+    }
 
     return{
       state,
@@ -235,7 +284,8 @@ export default defineComponent({
       returnToString,
       onChangeSearchKeywordType,
       onChangeStepLevel,
-      selectStepLevelElRef
+      selectStepLevelElRef,
+      changeStepLevel
 
     }
 

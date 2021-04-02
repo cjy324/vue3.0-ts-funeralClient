@@ -5,7 +5,8 @@
   <section class="section section-order-write-form-box px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
-        <div v-if="state.order.id !== undefined && globalShare.loginedClient.id === state.order.clientId">
+        <div v-if="(state.order.id !== undefined && globalShare.loginedClient.id === state.order.clientId) 
+        || (state.order.id !== undefined && globalShare.loginedExpert.id === state.order.expertId)">
           <div title="진행단계">
             <div class="btn-success">
               진행단계 : 
@@ -63,16 +64,17 @@
             <div class="btns mt-2">
               <router-link v-if="globalShare.loginedClient.id === state.order.clientId" class="btn-secondary" :to="'/order/doModify?id=' + state.order.id">수정</router-link>
               <router-link v-if="globalShare.loginedClient.id === state.order.clientId" class="btn-danger" to="doDelete">삭제</router-link>
-              <router-link :to="'/order/list?memberId='+ globalShare.loginedClient.id" class="btn-primary">리스트로 가기</router-link>
+              <router-link :to="'/order/list?memberId='+ (globalShare.loginedClient.id != null ? globalShare.loginedClient.id : globalShare.loginedExpert.id)" class="btn-primary">리스트로 가기</router-link>
             </div>
           </div>
         </div>
-        <!-- 의뢰인/전문가 구분방법 고민 필요... -->
-        <div v-if="globalShare.loginedClient.id !== state.order.clientId">
+        
+        <div v-if="(globalShare.loginedClient.id != null && globalShare.loginedClient.id !== state.order.clientId)
+        || (globalShare.loginedExpert.id != null && globalShare.loginedExpert.id !== state.order.expertId)">
           <p>해당 요청서에 대한 권한이 없습니다.</p>
           <router-link class="btn-link" to="/home/main">홈</router-link>으로 이동
         </div>
-        <div v-if="globalShare.loginedClient.id == null">
+        <div v-if="globalShare.loginedClient.id == null && globalShare.loginedExpert.id == null">
           <router-link class="btn-link" to="/member/login">로그인</router-link> 후 이용해주세요.
         </div>
       </div>
