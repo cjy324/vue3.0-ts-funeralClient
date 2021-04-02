@@ -24,7 +24,8 @@ import ClientModifyPage from './pages/ClientModifyPage.vue'
 import OrderAddPage from './pages/OrderAddPage.vue'
 import OrderDetailPage from './pages/OrderDetailPage.vue'
 import OrderListPage from './pages/OrderListPage.vue'
-import OrderListPageForAsst from './pages/OrderListPageForAsst.vue'
+import FuneralListPage from './pages/FuneralListPage.vue'
+import FuneralMyListPage from './pages/FuneralMyListPage.vue'
 import OrderModifyPage from './pages/OrderModifyPage.vue'
 import ReviewAddPage from './pages/ReviewAddPage.vue'
 import AssistantJoinPage from './pages/AssistantJoinPage.vue'
@@ -140,6 +141,11 @@ const routes = [
     props: (route:any) => ({globalShare})
   },
   {
+    path: '/expert/login',
+    component: ExpertLoginPage,
+    props: (route:any) => ({globalShare})
+  },
+  {
     path: '/client/myPage',
     component: ClientMyPage,
     props: (route:any) => ({id: Util.toIntOrUnd(route.query.id), globalShare})
@@ -172,12 +178,17 @@ const routes = [
   {
     path: '/order/list',
     component: OrderListPage,
-    props: (route:any) => ({memberId: Util.toIntOrUnd(route.query.memberId), globalShare})
+    props: (route:any) => ({memberId: Util.toIntOrUnd(route.query.memberId), memberType: route.query.memberType, globalShare})
   },
   {
-    path: '/order/listForAsst',
-    component: OrderListPageForAsst,
-    props: (route:any) => ({memberId: Util.toIntOrUnd(route.query.memberId), globalShare})
+    path: '/funeral/list',
+    component: FuneralListPage,
+    props: (route:any) => ({globalShare})
+  },
+  {
+    path: '/funeral/myList',
+    component: FuneralMyListPage,
+    props: (route:any) => ({memberId: Util.toIntOrUnd(route.query.memberId), memberType: route.query.memberType, globalShare})
   },
   {
     path: '/order/doModify',

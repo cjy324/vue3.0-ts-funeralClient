@@ -4,7 +4,7 @@
 //axios: ajax통신을 받아오는 것
 //@types/axios: typescript에서 axios를 다루는데 도움이 되는 정보들
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import {IOrder, IClient, IExpert, IAssistant, IReview} from '../types'
+import {IOrder, IClient, IExpert, IAssistant, IReview, IFuneral} from '../types'
 
 // API 원형
 abstract class HttpClient {
@@ -104,9 +104,16 @@ export interface MainApi__order_list__IResponseBody extends Base__IResponseBodyT
 }
 
 // /usr/article/list 의 응답 타입
-export interface MainApi__order_list_forAssistant__IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__funeral_list__IResponseBody extends Base__IResponseBodyType1 {
   body:{
-    orders: IOrder[]
+    funerals: IFuneral[]
+  };
+}
+
+// /usr/article/list 의 응답 타입
+export interface MainApi__funeral_myList__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    funerals: IFuneral[]
   };
 }
 
@@ -327,8 +334,12 @@ export class MainApi extends HttpClient {
     return this.get<MainApi__order_list__IResponseBody>(`/usr/order/list?memberId=${memberId}&memberType=${memberType}`);
   }
   // http://localhost:8090/usr/article/list?boardId=? 를 요청하고 응답을 받아오는 함수
-  public order_list_forAssistant() {
-    return this.get<MainApi__order_list_forAssistant__IResponseBody>(`/usr/order/listForAsst`);
+  public funeral_list() {
+    return this.get<MainApi__funeral_list__IResponseBody>(`/usr/funeral/list`);
+  }
+  // http://localhost:8090/usr/article/list?boardId=? 를 요청하고 응답을 받아오는 함수
+  public funeral_myList(memberId:number, memberType:string) {
+    return this.get<MainApi__funeral_myList__IResponseBody>(`/usr/funeral/myList?memberId=${memberId}&memberType=${memberType}`);
   }
 
   // http://localhost:8090/usr/detail/id?id=? 를 요청하고 응답을 받아오는 함수

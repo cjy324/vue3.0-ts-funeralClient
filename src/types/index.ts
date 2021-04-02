@@ -5,7 +5,6 @@ export interface IEntity {
   updateDate:string;
 }
 
-
 export interface IOrder extends IEntity {
 	head:number;
 	religion:string;
@@ -19,6 +18,22 @@ export interface IOrder extends IEntity {
   stepLevel:number;
   extra__clientName:string;
   extra__expertName:string;
+}
+
+export interface IFuneral extends IEntity {
+	head:number;
+	religion:string;
+	startDate:string;
+	endDate:string;
+	title:string;
+  funeralHome:string;
+	body:string;
+	expertId:number;
+	clientId:number;
+  stepLevel:number;
+  extra__clientName:string;
+  extra__expertName:string;
+  extra__assistants:[];
 }
 
 export interface IClient extends IEntity {
@@ -60,6 +75,7 @@ export interface IAssistant extends IEntity {
   career:string;
   extra__thumbImg:string;
   extra__ratingPoint:number;
+  extra__relFuneralId:number;
   
 }
 

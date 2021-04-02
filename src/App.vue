@@ -30,8 +30,8 @@
               ASSISTANT's
             </router-link>
           </li>
-          <li v-if="globalShare.loginedAssistantId !== null">
-            <router-link to="/order/listForAsst" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+          <li v-if="globalShare.loginedAssistant.id !== null || globalShare.loginedExpert.id !== null">
+            <router-link to="/funeral/list" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               FUNERAL LIST
             </router-link>
           </li>
@@ -43,6 +43,16 @@
           <li v-if="globalShare.loginedExpert.id !== null">
             <router-link :to="'/order/list?memberId='+ globalShare.loginedExpert.id + '&memberType=expert'" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
               ORDER LIST
+            </router-link>
+          </li>
+          <li v-if="globalShare.loginedExpert.id !== null">
+            <router-link :to="'/funeral/myList?memberId='+ globalShare.loginedExpert.id + '&memberType=expert'" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+              MY FUNERAL LIST
+            </router-link>
+          </li>
+          <li v-if="globalShare.loginedAssistant.id !== null">
+            <router-link :to="'/funeral/myList?memberId='+ globalShare.loginedAssistant.id + '&memberType=assistant'" class="h-full flex items-center font-bold px-4 hover:bg-black hover:text-white">
+              MY FUNERAL LIST
             </router-link>
           </li>
           <li v-if="globalShare.loginedClient.id !== null">
