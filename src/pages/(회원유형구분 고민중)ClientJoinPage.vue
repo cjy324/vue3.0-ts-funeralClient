@@ -6,7 +6,12 @@
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <form v-if="globalShare.isLogined == false" v-on:submit.prevent="checkAndJoin">
           <div class="form-control">
-            <div class="btn-success">회원유형: 의뢰인</div>
+            <div class="btn-success">회원유형</div>
+            <select v-model="state.memberType" class="h-full w-1/4" id="" @change="onChangeMemberType($event)">
+              <option value="의뢰인">의뢰인</option>
+              <option value="도우미">도우미</option>
+              <option value="지도사">지도사</option>
+            </select>
           </div>
           <FormRow title="프로필 이미지">
             <input ref="profileImgElRef" class="form-row-input" type="file" placeholder="프로필 이미지를 선택해 주세요.">
@@ -32,6 +37,12 @@
           <FormRow title="지역">
             <input ref="regionElRef" class="form-row-input" type="text" placeholder="시/도 주소를 입력해주세요.">
           </FormRow>
+          <FormRow v-show="state.memberType == '지도사'"  title="자격증">
+            <input ref="licenseElRef" class="form-row-input" type="text" placeholder="보유자격증을 입력해주세요." value="없음">
+          </FormRow>
+          <FormRow v-show="state.memberType == '지도사' || state.memberType == '도우미'"  title="경력">
+            <input ref="careerElRef" class="form-row-input" type="text" placeholder="관련 경력을 입력해주세요." value="없음">
+          </FormRow>
           <FormRow title="가입">
             <div class="btns">
               <input type="submit" value="가입" class="btn-primary" />
@@ -47,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref,  getCurrentInstance } from 'vue'
+import { defineComponent, ref, reactive, getCurrentInstance, computed } from 'vue'
 import { MainApi } from '../apis'
 import { Router } from 'vue-router';
 
@@ -70,7 +81,20 @@ export default defineComponent({
     const cellphoneNoElRef = ref<HTMLInputElement>();
     const emailElRef = ref<HTMLInputElement>();
     const regionElRef = ref<HTMLInputElement>();
+    const licenseElRef = ref<HTMLInputElement>();
+    const careerElRef = ref<HTMLInputElement>();
 
+
+    const state = reactive({
+      memberType: '의뢰인' as string,
+    });
+
+    let selectMemberType = '의뢰인'
+
+    function onChangeMemberType(event:any){
+      selectMemberType = event.target.value;
+      return selectMemberType;
+    };
 
     function checkAndJoin() {
        // 아이디 체크
@@ -169,7 +193,52 @@ export default defineComponent({
         return;
       }
 
+      //자격증 값 가져오기
+      if ( licenseElRef.value == null ) {
+          return;
+      }
+      const licenseEl = licenseElRef.value;
+      licenseEl.value = licenseEl.value.trim();
 
+
+      //경력 값 가져오기
+      if ( careerElRef.value == null ) {
+          return;
+      }
+      const careerEl = careerElRef.value;
+      careerEl.value = careerEl.value.trim();
+
+      //회원유형이 지도사일 경우
+      if (selectMemberType = '지도사'){
+
+
+        // 자격증 공백 체크
+        if ( licenseEl.value.length == 0 ) {
+          alert('자격증정보를 입력해주세요.');
+          licenseEl.focus();
+          return;
+        }
+        // 경력 공백 체크
+        if ( careerEl.value.length == 0 ) {
+          alert('관련경력정보를 입력해주세요.(없으면 경력 없음으로 입력)');
+          careerEl.focus();
+          return;
+        }
+  
+      }
+
+      //회원유형이 도우미일 경우
+      if (selectMemberType = '도우미'){
+
+        // 경력 공백 체크
+        if ( careerEl.value.length == 0 ) {
+          alert('관련경력정보를 입력해주세요.(없으면 경력 없음으로 입력)');
+          careerEl.focus();
+          return;
+        }
+        
+      }
+      
       let startFileUpload = (onSuccess:Function) => {
         // ! => 반전
         // a = undefinded(or null) / !a = true / !!a = flase란 의미
@@ -199,10 +268,15 @@ export default defineComponent({
       //파일첨부기능 추가로 인해 로직 변경
       //join(loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value);
       const startJoin = (genFileIdsStr:string) =>{
-       
           join(loginIdEl.value, loginPwEl.value, nameEl.value, cellphoneNoEl.value, emailEl.value, regionEl.value,  genFileIdsStr);
       }
-     
+      const startExpertJoin = (genFileIdsStr:string) =>{
+          joinExpert(loginIdEl.value, loginPwEl.value, nameEl.value, cellphoneNoEl.value, emailEl.value, regionEl.value, licenseEl.value, careerEl.value, genFileIdsStr);
+      }
+      const startAssistantJoin = (genFileIdsStr:string) =>{
+          joinAssistant(loginIdEl.value, loginPwEl.value, nameEl.value, cellphoneNoEl.value, emailEl.value, regionEl.value, careerEl.value, genFileIdsStr);
+      }
+
 
       //startFileUpload 로직을 먼저 실행한 후
       //onSuccess 즉, startJoin를 실행한다. onSuccess = startJoin
@@ -225,8 +299,36 @@ export default defineComponent({
         });
     }
 
-    return {
+    function joinExpert(loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, license:string, career:string, genFileIdsStr:string) {
+      mainApi.expert_doJoin(loginId, loginPw, name, cellphoneNo, email, region, license, career, genFileIdsStr)
+        .then(axiosResponse => {
+          
+          alert(axiosResponse.data.msg);
+          if ( axiosResponse.data.fail ) {
+            return;
+          }
+          
+          router.replace('/expert/login?loginId=' + loginId)
+        });
+    }
 
+    function joinAssistant(loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, career:string, genFileIdsStr:string) {
+      mainApi.assistant_doJoin(loginId, loginPw, name, cellphoneNo, email, region, career, genFileIdsStr)
+        .then(axiosResponse => {
+          
+          alert(axiosResponse.data.msg);
+          if ( axiosResponse.data.fail ) {
+            return;
+          }
+          
+          router.replace('/assistant/login?loginId=' + loginId)
+        });
+    }
+
+
+
+    return {
+      state,
       checkAndJoin,
       profileImgElRef,
       loginIdElRef,
@@ -236,7 +338,9 @@ export default defineComponent({
       cellphoneNoElRef,
       emailElRef,
       regionElRef,
-
+      licenseElRef,
+      careerElRef,
+      onChangeMemberType
 
     }
   }

@@ -1,12 +1,12 @@
 <template>
   <TitleBar>회원가입</TitleBar>
 
-  <section class="section section-client-join-form px-2">
+  <section class="section section-assistant-join-form px-2">
     <div class="container mx-auto">
       <div class="px-6 py-6 bg-white rounded-lg shadow-md">
         <form v-if="globalShare.isLogined == false" v-on:submit.prevent="checkAndJoin">
           <div class="form-control">
-            <div class="btn-success">회원유형: 의뢰인</div>
+            <div class="btn-secondary">회원유형: 도우미</div>
           </div>
           <FormRow title="프로필 이미지">
             <input ref="profileImgElRef" class="form-row-input" type="file" placeholder="프로필 이미지를 선택해 주세요.">
@@ -32,6 +32,9 @@
           <FormRow title="지역">
             <input ref="regionElRef" class="form-row-input" type="text" placeholder="시/도 주소를 입력해주세요.">
           </FormRow>
+          <FormRow title="경력">
+            <input ref="careerElRef" class="form-row-input" type="text" placeholder="관련 경력을 입력해주세요.(없으면 '없음' 입력)">
+          </FormRow>
           <FormRow title="가입">
             <div class="btns">
               <input type="submit" value="가입" class="btn-primary" />
@@ -47,12 +50,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref,  getCurrentInstance } from 'vue'
+import { defineComponent, ref, reactive, getCurrentInstance, computed } from 'vue'
 import { MainApi } from '../apis'
 import { Router } from 'vue-router';
 
 export default defineComponent({
-  name: 'ClientJoinPage',
+  name: 'AssistantJoinPage',
   props: {
     globalShare: {
       type: Object,
@@ -70,7 +73,7 @@ export default defineComponent({
     const cellphoneNoElRef = ref<HTMLInputElement>();
     const emailElRef = ref<HTMLInputElement>();
     const regionElRef = ref<HTMLInputElement>();
-
+    const careerElRef = ref<HTMLInputElement>();
 
     function checkAndJoin() {
        // 아이디 체크
@@ -170,6 +173,21 @@ export default defineComponent({
       }
 
 
+      //경력 값 가져오기
+      if ( careerElRef.value == null ) {
+          return;
+      }
+      const careerEl = careerElRef.value;
+      careerEl.value = careerEl.value.trim();
+
+      // 경력 공백 체크
+        if ( careerEl.value.length == 0 ) {
+          alert('관련경력정보를 입력해주세요.(없으면 경력 없음으로 입력)');
+          careerEl.focus();
+          return;
+        }
+
+      
       let startFileUpload = (onSuccess:Function) => {
         // ! => 반전
         // a = undefinded(or null) / !a = true / !!a = flase란 의미
@@ -199,21 +217,17 @@ export default defineComponent({
       //파일첨부기능 추가로 인해 로직 변경
       //join(loginIdEl.value, loginPwEl.value, nameEl.value, nicknameEl.value, cellphoneNoEl.value, emailEl.value);
       const startJoin = (genFileIdsStr:string) =>{
-       
-          join(loginIdEl.value, loginPwEl.value, nameEl.value, cellphoneNoEl.value, emailEl.value, regionEl.value,  genFileIdsStr);
+          join(loginIdEl.value, loginPwEl.value, nameEl.value, cellphoneNoEl.value, emailEl.value, regionEl.value, careerEl.value, genFileIdsStr);
       }
-     
 
       //startFileUpload 로직을 먼저 실행한 후
       //onSuccess 즉, startJoin를 실행한다. onSuccess = startJoin
       //실행 순서 : 1.첨부파일이 있는지 확인하고 업로드까지 진행하는 startFileUpload함수 종료 후 2.회원가입 join함수가 실행된다.
         startFileUpload(startJoin);
-
-
     }
 
-    function join(loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, genFileIdsStr:string) {
-      mainApi.client_doJoin(loginId, loginPw, name, cellphoneNo, email, region, genFileIdsStr)
+    function join(loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, career:string, genFileIdsStr:string) {
+      mainApi.assistant_doJoin(loginId, loginPw, name, cellphoneNo, email, region, career, genFileIdsStr)
         .then(axiosResponse => {
           
           alert(axiosResponse.data.msg);
@@ -221,12 +235,12 @@ export default defineComponent({
             return;
           }
           
-          router.replace('/client/login?loginId=' + loginId)
+          router.replace('/assistant/login?loginId=' + loginId)
         });
     }
 
-    return {
 
+    return {
       checkAndJoin,
       profileImgElRef,
       loginIdElRef,
@@ -236,7 +250,7 @@ export default defineComponent({
       cellphoneNoElRef,
       emailElRef,
       regionElRef,
-
+      careerElRef,
 
     }
   }

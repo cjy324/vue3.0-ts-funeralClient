@@ -132,6 +132,13 @@ export interface MainApi__client_doJoin__IResponseBody extends Base__IResponseBo
 }
 
 // /usr/member/doJoin 의 응답 타입
+export interface MainApi__expert_doJoin__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number
+  };
+}
+
+// /usr/member/doJoin 의 응답 타입
 export interface MainApi__assistant_doJoin__IResponseBody extends Base__IResponseBodyType1 {
   body:{
     id: number
@@ -329,7 +336,7 @@ export class MainApi extends HttpClient {
       localStorage.removeItem("loginedExpertName");
       localStorage.removeItem("loginedExpertProfileImgUrl");
 
-      location.replace('/usr/client/login');
+      location.replace('/usr/home/main');
     }
 
     return axiosResponse;
@@ -409,6 +416,24 @@ export class MainApi extends HttpClient {
         cellphoneNo,
         email,
         region,
+        genFileIdsStr
+      }
+    );
+  }
+
+  // http://localhost:8024/usr/member/doJoin/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public expert_doJoin(loginId:string, loginPw:string, name:string, cellphoneNo:string, email:string, region:string, license:string, career:string, genFileIdsStr:string) {
+    return this.postByForm<MainApi__expert_doJoin__IResponseBody>(
+      `/usr/expert/doJoin`, {
+        loginId,
+        loginPw,
+        name,
+        cellphoneNo,
+        email,
+        region,
+        career,
+        license,
         genFileIdsStr
       }
     );

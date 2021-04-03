@@ -67,7 +67,12 @@
           </li>
           <li v-if="globalShare.isLogined == false">
             <router-link to="/client/join" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
-              Sign-up
+              Sign-up(Client)
+            </router-link>
+          </li>
+          <li v-if="globalShare.isLogined == false">
+            <router-link to="/assistant/join" class="h-full flex items-center font-bold px-4 hover:bg-white hover:text-black whitespace-nowrap">
+              Sign-up(Assistant)
             </router-link>
           </li>
           <li v-if="globalShare.isLogined == false">

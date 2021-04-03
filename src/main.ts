@@ -131,6 +131,11 @@ const routes = [
     props: (route:any) => ({globalShare})
   },
   {
+    path: '/assistant/join',
+    component: AssistantJoinPage,
+    props: (route:any) => ({globalShare})
+  },
+  {
     path: '/client/login',
     component: ClientLoginPage,
     props: (route:any) => ({globalShare})
