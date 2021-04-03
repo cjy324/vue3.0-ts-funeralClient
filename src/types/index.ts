@@ -85,3 +85,11 @@ export interface IReview extends IEntity{
   body:string;
   clientId:number;
 }
+
+export interface IRating extends IEntity{
+  relId:number;
+  relTypeCode:string;
+  point:number;
+  clientId:number;
+  extra__clientName:string;
+}

@@ -106,9 +106,6 @@ export default defineComponent({
     onMounted(() => {
       loadOrder(props.id);
     });
-    watch(() => props.id, (newValue, oldValue) => {
-      loadOrder(props.id);
-    })
 
     /* 공백 체크 */
     function checkAndModifyOrder(){

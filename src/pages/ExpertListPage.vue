@@ -68,7 +68,6 @@
             <div class="font-bold text-2xl text-white">
               {{ expert.extra__ratingPoint.toFixed(1) }}/5
             </div>
-            <star-rating :increment="0.5"></star-rating>
           </div>
         </div>
         <!--후기-->
@@ -91,7 +90,7 @@
               {{review.updateDate}} / {{review.extra__clientName}}
             </p>
             <div class="btns" v-if="globalShare.loginedClient.id === review.clientId">
-                <router-link :to="'/review/doAdd?relTypeCode=expert&relId=' + expert.id" class="btn-secondary">
+                <router-link :to="'/review/doModify?relTypeCode=expert&relId=' + expert.id + '&id=' + review.id" class="btn-secondary">
                   수정
                 </router-link>
                 <button class="btn-warning" @click="doDeleteReview(review.id)">삭제</button>

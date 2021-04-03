@@ -78,9 +78,9 @@
         <router-link :to="'/funeral/detail?id=' + funeral.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
             상세보기
         </router-link>
-        <router-link :to="'/funeral/doApply?funeralId=' + funeral.id" class="block btn-secondary mt-2 h-10 w-full rounded-md">
-            지원하기
-        </router-link>
+        <button class="block btn-secondary mt-2 h-10 w-full rounded-md" @click="cancleApplyForFuneral(funeral.id, globalShare.loginedAssistant.id)">
+            지원 취소하기
+        </button>
         
       </div>
       </div>
@@ -129,6 +129,23 @@ export default defineComponent({
       result:'' as string,
       selectStepLevel: 0,
     });
+
+    function cancleApplyForFuneral(funeralId:number, assistantId:number){
+      if(confirm('지원 취소하시겠습니까?') == false){
+        return;
+      }
+      mainApi.funeral_asstCancleApplyForFuneral(funeralId, assistantId)
+        .then(axiosResponse => {
+          
+          alert(axiosResponse.data.msg);
+          if ( axiosResponse.data.fail ) {
+            return;
+          }
+          window.location.reload();
+        });
+    }
+
+
 
     let searchKeywordType = "title";
 
@@ -244,7 +261,8 @@ export default defineComponent({
       returnToString,
       onChangeSearchKeywordType,
       onChangeStepLevel,
-      selectStepLevelElRef
+      selectStepLevelElRef,
+      cancleApplyForFuneral
 
     }
 

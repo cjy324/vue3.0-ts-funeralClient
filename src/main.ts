@@ -28,6 +28,7 @@ import FuneralListPage from './pages/FuneralListPage.vue'
 import FuneralMyListPage from './pages/FuneralMyListPage.vue'
 import OrderModifyPage from './pages/OrderModifyPage.vue'
 import ReviewAddPage from './pages/ReviewAddPage.vue'
+import ReviewModifyPage from './pages/ReviewModifyPage.vue'
 import AssistantJoinPage from './pages/AssistantJoinPage.vue'
 import AssistantLoginPage from './pages/AssistantLoginPage.vue'
 import AssistantMyPage from './pages/AssistantMyPage.vue'
@@ -173,7 +174,7 @@ const routes = [
   {
     path: '/order/doAdd',
     component: OrderAddPage,
-    props: (route:any) => ({directorId: Util.toIntOrUnd(route.query.directorId), globalShare})
+    props: (route:any) => ({expertId: Util.toIntOrUnd(route.query.expertId), globalShare})
   },
   {
     path: '/order/detail',
@@ -204,6 +205,11 @@ const routes = [
     path: '/review/doAdd',
     component: ReviewAddPage,
     props: (route:any) => ({relTypeCode: route.query.relTypeCode, relId: Util.toIntOrUnd(route.query.relId), globalShare})
+  },
+  {
+    path: '/review/doModify',
+    component: ReviewModifyPage,
+    props: (route:any) => ({relTypeCode: route.query.relTypeCode, relId: Util.toIntOrUnd(route.query.relId), id: Util.toIntOrUnd(route.query.id), globalShare})
   },
 
 ];

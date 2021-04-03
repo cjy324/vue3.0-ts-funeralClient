@@ -13,9 +13,8 @@
         <option value="5">장례종료(최종종료)</option>
       </select>
       <select class="h-full w-1/4" id="" @change="onChangeSearchKeywordType($event)">
-        <option value="title">제목</option>
-        <option value="body">내용</option>
         <option value="funeralHome">장례식장</option>
+        <option value="religion">종교</option>
       </select>
       <input id="searchKeywordElRef" ref="searchKeywordElRef" class="h-full w-full pl-4" type="text" placeholder="검색어 입력" :value="searchKeyword" @keyup.enter="onInput($event)" >
       <button class="w-20 text-white rounded-r-md bg-blue-500" type="button" @click="onClickInput">검색</button>
@@ -78,9 +77,9 @@
         <router-link :to="'/funeral/detail?id=' + funeral.id" class="block btn-primary mt-2 h-10 w-full rounded-md">
             상세보기
         </router-link>
-        <router-link :to="'/funeral/doApply?funeralId=' + funeral.id" class="block btn-secondary mt-2 h-10 w-full rounded-md">
-            지원하기
-        </router-link>
+        <button v-if="globalShare.loginedAssistant.id != null" class="block btn-secondary mt-2 h-10 w-full rounded-md" @click="applyForFuneral(funeral.id, globalShare.loginedAssistant.id)">
+            바로 지원하기
+        </button>
         
       </div>
       </div>
@@ -121,6 +120,22 @@ export default defineComponent({
       result:'' as string,
       selectStepLevel: 0,
     });
+
+
+    function applyForFuneral(funeralId:number, assistantId:number){
+      if(confirm('바로 지원하시겠습니까?') == false){
+        return;
+      }
+      mainApi.funeral_asstApplyForFuneral(funeralId, assistantId)
+        .then(axiosResponse => {
+          
+          alert(axiosResponse.data.msg);
+          if ( axiosResponse.data.fail ) {
+            return;
+          }
+          window.location.reload();
+        });
+    }
 
     let searchKeywordType = "title";
 
@@ -174,6 +189,7 @@ export default defineComponent({
       return stepLevelToStr;
     }
 
+
     //alert("1");
     const filteredFunerals = computed(() => {
       //alert("2");
@@ -183,22 +199,16 @@ export default defineComponent({
       
       //filteredFunerals = state.funerals.filter((funeral:IFuneral) => funeral.stepLevel === state.selectStepLevel)
       if(state.selectStepLevel == 0){
-        if(searchKeywordType == "title"){
-        filteredFunerals = state.funerals.filter((funeral:IFuneral) => funeral.title.includes(state.searchKeyword))
-      }
-      if(searchKeywordType == "body"){
-        filteredFunerals = state.funerals.filter((funeral:IFuneral) => funeral.body.includes(state.searchKeyword))
+        if(searchKeywordType == "religion"){
+        filteredFunerals = state.funerals.filter((funeral:IFuneral) => funeral.religion.includes(state.searchKeyword))
       }
       if(searchKeywordType == "funeralHome"){
         filteredFunerals = state.funerals.filter((funeral:IFuneral) => funeral.funeralHome.includes(state.searchKeyword))
       }
       }
       else{
-        if(searchKeywordType == "title"){
-        filteredFunerals = state.funerals.filter((funeral:IFuneral) => funeral.title.includes(state.searchKeyword) && funeral.stepLevel === state.selectStepLevel)
-      }
-      if(searchKeywordType == "body"){
-        filteredFunerals = state.funerals.filter((funeral:IFuneral) => funeral.body.includes(state.searchKeyword) && funeral.stepLevel === state.selectStepLevel)
+        if(searchKeywordType == "religion"){
+        filteredFunerals = state.funerals.filter((funeral:IFuneral) => funeral.religion.includes(state.searchKeyword) && funeral.stepLevel === state.selectStepLevel)
       }
       if(searchKeywordType == "funeralHome"){
         filteredFunerals = state.funerals.filter((funeral:IFuneral) => funeral.funeralHome.includes(state.searchKeyword) && funeral.stepLevel === state.selectStepLevel)
@@ -234,7 +244,8 @@ export default defineComponent({
       returnToString,
       onChangeSearchKeywordType,
       onChangeStepLevel,
-      selectStepLevelElRef
+      selectStepLevelElRef,
+      applyForFuneral
 
     }
 

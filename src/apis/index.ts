@@ -4,7 +4,7 @@
 //axios: ajax통신을 받아오는 것
 //@types/axios: typescript에서 axios를 다루는데 도움이 되는 정보들
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import {IOrder, IClient, IExpert, IAssistant, IReview, IFuneral} from '../types'
+import {IOrder, IClient, IExpert, IAssistant, IReview, IFuneral, IRating} from '../types'
 
 // API 원형
 abstract class HttpClient {
@@ -116,6 +116,21 @@ export interface MainApi__funeral_myList__IResponseBody extends Base__IResponseB
     funerals: IFuneral[]
   };
 }
+
+// /usr/member/doModify 의 응답 타입
+export interface MainApi__funeral_asstApplyForFuneral__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number
+  };
+}
+
+// /usr/member/doModify 의 응답 타입
+export interface MainApi__funeral_asstCancleApplyForFuneral__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number
+  };
+}
+
 
 // /usr/article/detail 의 응답 타입
 export interface MainApi__order_detail__IResponseBody extends Base__IResponseBodyType1 {
@@ -272,6 +287,13 @@ export interface MainApi__review_doAdd__IResponseBody extends Base__IResponseBod
   };
 }
 
+// /usr/review/doAdd 의 응답 타입
+export interface MainApi__review_doModify__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number
+  };
+}
+
 // /usr/review/doDelete 의 응답 타입
 export interface MainApi__review_doDelete__IResponseBody extends Base__IResponseBodyType1 {
   body:{
@@ -286,8 +308,29 @@ export interface MainApi__review_list__IResponseBody extends Base__IResponseBody
   };
 }
 
+// /usr/member/list 의 응답 타입
+export interface MainApi__review_detail__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    review: IReview
+  };
+}
+
 // /usr/rating/doAdd 의 응답 타입
 export interface MainApi__rating_doAdd__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    id: number
+  };
+}
+
+// /usr/rating/doAdd 의 응답 타입
+export interface MainApi__rating_getRatingRelClient__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    rating: IRating
+  };
+}
+
+// /usr/rating/doAdd 의 응답 타입
+export interface MainApi__rating_doModify__IResponseBody extends Base__IResponseBodyType1 {
   body:{
     id: number
   };
@@ -353,6 +396,21 @@ export class MainApi extends HttpClient {
   // http://localhost:8090/usr/article/list?boardId=? 를 요청하고 응답을 받아오는 함수
   public funeral_myList(memberId:number, memberType:string) {
     return this.get<MainApi__funeral_myList__IResponseBody>(`/usr/funeral/myList?memberId=${memberId}&memberType=${memberType}`);
+  }
+
+  // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public funeral_asstApplyForFuneral(funeralId:number, assistantId:number) {
+    return this.postByForm<MainApi__funeral_asstApplyForFuneral__IResponseBody>(
+      `/usr/funeral/asstApplyForFuneral`, {
+        funeralId,
+        assistantId,
+      }
+    );
+  }
+  // http://localhost:8090/usr/article/list?boardId=? 를 요청하고 응답을 받아오는 함수
+  public funeral_asstCancleApplyForFuneral(funeralId:number, assistantId:number) {
+    return this.get<MainApi__funeral_asstCancleApplyForFuneral__IResponseBody>(`/usr/funeral/asstCancleApplyForFuneral?funeralId=${funeralId}&assistantId=${assistantId}`);
   }
 
   // http://localhost:8090/usr/detail/id?id=? 를 요청하고 응답을 받아오는 함수
@@ -599,6 +657,24 @@ export class MainApi extends HttpClient {
   public review_list(relTypeCode:string) {
     return this.get<MainApi__review_list__IResponseBody>(`/usr/review/list?relTypeCode=${relTypeCode}`);
   }
+
+  // http://localhost:8090/usr/member/list?boardId=? 를 요청하고 응답을 받아오는 함수
+  public review_detail(id:number) {
+    return this.get<MainApi__review_detail__IResponseBody>(`/usr/review/detail?id=${id}`);
+  }
+
+  // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public review_doModify(id:number, body:string, clientId:number) {
+    return this.postByForm<MainApi__review_doModify__IResponseBody>(
+      `/usr/review/doModify`, {
+        id,
+        body,
+        clientId,
+        
+      }
+    );
+  }
    
 
   // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
@@ -606,6 +682,25 @@ export class MainApi extends HttpClient {
   public rating_doAdd(relTypeCode:string, relId:number, point:number, clientId:number) {
     return this.postByForm<MainApi__rating_doAdd__IResponseBody>(
       `/usr/rating/doAdd`, {
+        relTypeCode,
+        relId,
+        point,
+        clientId,
+        
+      }
+    );
+  }
+
+  // http://localhost:8090/usr/member/list?boardId=? 를 요청하고 응답을 받아오는 함수
+  public rating_getRatingRelClient(relTypeCode:string, relId:number, clientId:number) {
+    return this.get<MainApi__rating_getRatingRelClient__IResponseBody>(`/usr/rating/getRatingRelClient?relTypeCode=${relTypeCode}&relId=${relId}&clientId=${clientId}`);
+  }
+
+  // http://localhost:8090/usr/member/doOrder/loginId=?&loginPw=?...... 를 요청하고 응답을 받아오는 함수
+  // postByForm: post 전송을 스프링이 이해할 수 있는 form형식으로 전송시켜주는 함수?
+  public rating_doModify(relTypeCode:string, relId:number, point:number, clientId:number) {
+    return this.postByForm<MainApi__rating_doModify__IResponseBody>(
+      `/usr/rating/doModify`, {
         relTypeCode,
         relId,
         point,
